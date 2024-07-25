@@ -1,0 +1,24 @@
+package com.backend.empowerpro.dto.vacancy;
+
+import com.backend.empowerpro.entity.Employee;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class VacancyCreationDto {
+    private Long id;
+    private String jobTitle;
+    private String employmentType;
+    private String jobDescription;
+    private String requirements;
+    private String responsibilities;
+    private Date applicationDeadline;
+    private String contactEmail;
+}

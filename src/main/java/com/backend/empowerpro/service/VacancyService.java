@@ -1,0 +1,18 @@
+package com.backend.empowerpro.service;
+
+import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
+import com.backend.empowerpro.dto.employee.EmployeeDto;
+import com.backend.empowerpro.dto.employee.EmployeeUpdateDto;
+import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
+import com.backend.empowerpro.dto.vacancy.VacancyDto;
+import com.backend.empowerpro.entity.Employee;
+
+import java.util.List;
+
+public interface VacancyService {
+    public List<VacancyDto> getAllVacancies();
+    public String createVacancy(VacancyCreationDto vacancyCreationDto);
+    public VacancyDto getOneVacancy(Long id);
+    public VacancyDto updateVacancy(Long id,VacancyCreationDto vacancyCreationDto);
+    public String deleteVacancy(Long id);
+}
