@@ -16,47 +16,45 @@ import lombok.*;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "emp_id"  )
+    @Column(name = "emp_id")
     private Long id;
 
-    @Column(name = "first_name" , length = 50 , nullable = false)
+    @Column(name = "first_name", length = 50, nullable = false)
     private String firstName;
 
-    @Column(name = "last_name" , length = 50 , nullable = false)
+    @Column(name = "last_name", length = 50, nullable = false)
     private String lastName;
 
-    @Column(name = "address", length = 500 ,nullable = false)
+    @Column(name = "address", length = 500, nullable = false)
     private String address;
 
-    @Column(name = "email" , length = 50 ,nullable = false )
+    @Column(name = "email", length = 50, nullable = false)
     @Email
     private String email;
 
-    @Column(name = "phone_number" ,nullable = false , unique = true)
+    @Column(name = "phone_number", nullable = false, unique = true)
     private int phoneNumber;
 
-    @Column(name = "work_title" , length = 50 ,nullable = false)
+    @Column(name = "work_title", length = 50, nullable = false)
     private String workTitle;
 
-    @Column(name = "role" , length = 50 ,nullable = false )
+    @Column(name = "role", length = 50, nullable = false)
     private String role;
 
-    @Column(name = "username" , length = 50 ,nullable = false ,unique = true)
+    @Column(name = "username", length = 50, nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password",nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "summary" , length = 50000 )
+    @Column(name = "summary", length = 50000)
     private String summary;
 
-    @Column(name = "skills" , length = 50000 )
+    @Column(name = "skills", length = 50000)
     private String skills;
 
-    @Column(name = "experiences" , length = 50000 )
+    @Column(name = "experiences", length = 50000)
     private String experiences;
-
-
 
 
 }
