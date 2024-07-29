@@ -17,4 +17,14 @@ public class EmployeeController {
     public ResponseEntity<Employee> creation(@RequestBody EmployeeCreationDto employeeCreationDto) {
         return ResponseEntity.ok(employeeServiceImp.createEmployee(employeeCreationDto));
     }
+
+    @PostMapping("/complaint-creation")
+    public ResponseEntity<String> creation(@RequestBody ComplaintDto complaintDto) {
+        return ResponseEntity.ok(complaintService.createComplaint(complaintDto));
+    }
+
+    @GetMapping("/complaint-FromMyself")
+    public ResponseEntity<List<VacancyDto>> getComplaintFromMyself() {
+        return ResponseEntity.ok(vacancyService.getAllComplaintsFromMyself());
+    }
 }
