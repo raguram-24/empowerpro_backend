@@ -41,7 +41,7 @@ public class AccountsServiceImp implements AccountsService {
 
         }catch (Exception e){
             logger.error("Error Has been Occurred {}",e.getMessage());
-            throw new RuntimeException("An unexpected error occurred while fetching vacancies", e);
+            throw new RuntimeException("An unexpected error occurred while fetching Accounts", e);
         }
     }
 

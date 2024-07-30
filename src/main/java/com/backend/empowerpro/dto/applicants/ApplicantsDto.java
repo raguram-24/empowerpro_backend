@@ -1,5 +1,7 @@
 package com.backend.empowerpro.dto.applicants;
 
+import com.backend.empowerpro.dto.vacancy.VacancyDto;
+import com.backend.empowerpro.entity.Vacancy;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -28,7 +30,9 @@ public class ApplicantsDto {
     private String companyName;
     private Date workedFrom;
     private Date workedTo;
+    private String resume;
     private String resumePath;
     private LocalDateTime submittedAt;
+    private VacancyDto vacancy;
 
 }
