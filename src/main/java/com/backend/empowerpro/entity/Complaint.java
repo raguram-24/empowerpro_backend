@@ -27,7 +27,6 @@ public class Complaint {
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "sender")
     private String sender;
 
     @Column(name = "assigned_to")

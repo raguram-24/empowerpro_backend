@@ -1,13 +1,11 @@
 package com.backend.empowerpro.controller;
 
 
-import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
+import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
-import com.backend.empowerpro.entity.Employee;
+import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.VacancyService;
-import com.backend.empowerpro.service.impl.EmployeeServiceImp;
-import com.backend.empowerpro.service.impl.VacancyServiceImp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("api/hr")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class HrController {
+//    public final ComplaintService complaintService;
     private final VacancyService vacancyService;
     @PostMapping("/vacancy-creation")
     public ResponseEntity<String> creation(@RequestBody VacancyCreationDto vacancyCreationDto) {
@@ -43,19 +43,19 @@ public class HrController {
         return ResponseEntity.ok(vacancyService.deleteVacancy(id));
     }
 
-      @PostMapping("/complaint-creation")
-    public ResponseEntity<String> creation(@RequestBody ComplaintDto complaintDto) {
-        return ResponseEntity.ok(complaintService.createComplaint(complaintDto));
-    }
-    @GetMapping("/complaint-ToMe")
-    public ResponseEntity<List<ComplaintDto>> getComplaintsToMe() {
-        return ResponseEntity.ok(complaintService.getComplaintsToMe());
-    }
-
-    @GetMapping("/complaint-FromMyself")
-    public ResponseEntity<List<VacancyDto>> getComplaintsFromMyself() {
-        return ResponseEntity.ok(vacancyService.getComplaintsFromMyself());
-    }
+//      @PostMapping("/complaint-creation")
+//    public ResponseEntity<String> creation(@RequestBody ComplaintDto complaintDto) {
+//        return ResponseEntity.ok(complaintService.createComplaint(complaintDto));
+//    }
+//    @GetMapping("/complaint-ToMe")
+//    public ResponseEntity<List<ComplaintDto>> getComplaintsToMe() {
+//        return ResponseEntity.ok(complaintService.getComplaintsToMe());
+//    }
+//
+//    @GetMapping("/complaint-FromMyself")
+//    public ResponseEntity<List<ComplaintDto>> getComplaintsFromMyself() {
+//        return ResponseEntity.ok(complaintService.getComplaintsFromMyself());
+//    }
 
 
 
