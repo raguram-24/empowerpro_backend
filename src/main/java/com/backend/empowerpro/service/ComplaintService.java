@@ -6,6 +6,8 @@ import com.backend.empowerpro.entity.Complaint;
 import java.util.List;
 
 public interface ComplaintService {
+    List<ComplaintDto> getAllComplaints();
+
     List<ComplaintDto> getComplaintsToMe();
     List<ComplaintDto> getComplaintsFromMyself();
     String createComplaint(ComplaintDto complaintDto);

@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                     registry.requestMatchers("/api/executive/**").hasRole("Executive");
                     registry.requestMatchers("/api/team-lead/**").hasRole("TeamLead");
                     registry.requestMatchers("/api/finance/**").hasRole("Finance");
-//                    registry.requestMatchers("/api/employee/**").hasAnyRole("EMPLOYEE");
+//                  registry.requestMatchers("/api/employee/**").hasAnyRole("EMPLOYEE");
                     registry.anyRequest().authenticated();
                 })
                 .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

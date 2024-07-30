@@ -1,13 +1,24 @@
 package com.backend.empowerpro.controller;
+import com.backend.empowerpro.dto.complaint.ComplaintDto;
+import com.backend.empowerpro.service.ComplaintService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@RestController
+@RequestMapping("api/executive")
+@RequiredArgsConstructor
 public class ExecutiveController {
-      @PostMapping("/complaint-creation")
-    public ResponseEntity<String> creation(@RequestBody ComplaintDto complaintDto) {
-        return ResponseEntity.ok(complaintService.createComplaint(complaintDto));
-    }
+//    public final ComplaintService complaintService;
+//    @PostMapping("/complaint-creation")
+//    public ResponseEntity<String> creation(@RequestBody ComplaintDto complaintDto) {
+//        return ResponseEntity.ok(complaintService.createComplaint(complaintDto));
+//    }
 
-    @GetMapping("/complaint-FromMyself")
-    public ResponseEntity<List<VacancyDto>> getComplaintsFromMyself() {
-        return ResponseEntity.ok(vacancyService.getComplaintsFromMyself());
-    }
+//    @GetMapping("/complaint-FromMyself")
+//    public ResponseEntity<List<ComplaintDto>> getComplaintsFromMyself() {
+//        return ResponseEntity.ok(complaintService.getComplaintsFromMyself());
+//    }
 }
