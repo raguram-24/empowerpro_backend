@@ -37,11 +37,11 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/api/employees/creation", "/api/auth/login" ).permitAll();
-                    registry.requestMatchers("/api/admin/**").hasRole("ADMIN");
+                    registry.requestMatchers("/api/admin/**").hasRole("Admin");
                     registry.requestMatchers("/api/hr/**").hasRole("HR");
-                    registry.requestMatchers("/api/executive/**").hasRole("EXECUTIVE");
-                    registry.requestMatchers("/api/team-lead/**").hasRole("TEAMLEAD");
-                    registry.requestMatchers("/api/finance/**").hasRole("FINANCE");
+                    registry.requestMatchers("/api/executive/**").hasRole("Executive");
+                    registry.requestMatchers("/api/team-lead/**").hasRole("TeamLead");
+                    registry.requestMatchers("/api/finance/**").hasRole("Finance");
 //                    registry.requestMatchers("/api/employee/**").hasAnyRole("EMPLOYEE");
                     registry.anyRequest().authenticated();
                 })

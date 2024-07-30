@@ -1,5 +1,7 @@
 package com.backend.empowerpro.dto.applicants;
 
+import com.backend.empowerpro.dto.vacancy.VacancyDto;
+import com.backend.empowerpro.entity.Vacancy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +26,7 @@ public class ApplicantsCreationDto {
     private String companyName;
     private Date workedFrom;
     private Date workedTo;
+    private String resume;
     private String resumePath;
+    private VacancyDto vacancy;
 }

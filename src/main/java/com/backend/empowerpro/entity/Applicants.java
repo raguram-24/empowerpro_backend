@@ -55,12 +55,20 @@ public class Applicants {
     @Column(name = "worked_to")
     private Date workedTo;
 
+    @Column(name = "resume",nullable = false)
+    private String resume;
+
     @Column(name = "resume_path",nullable = false)
     private String resumePath;
+
 
     @CreationTimestamp
     @Column(name = "submitted_at", updatable = false)
     private LocalDateTime submittedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "vacancy_id", referencedColumnName = "vacancy_id")
+    private Vacancy vacancy;
 
 
 

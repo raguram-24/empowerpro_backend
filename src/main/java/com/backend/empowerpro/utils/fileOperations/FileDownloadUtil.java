@@ -1,5 +1,6 @@
 package com.backend.empowerpro.utils.fileOperations;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class FileDownloadUtil {
+    @Bean
     public static ResponseEntity<InputStreamResource> downloadFile(String filePath) throws IOException {
         File file = new File(filePath);
 
