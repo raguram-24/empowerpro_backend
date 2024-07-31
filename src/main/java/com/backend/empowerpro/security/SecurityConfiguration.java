@@ -41,6 +41,8 @@ public class SecurityConfiguration {
                     registry.requestMatchers("/api/hr/**").hasRole("HR");
                     registry.requestMatchers("/api/executive/**").hasRole("EXECUTIVE");
                     registry.requestMatchers("/api/team-lead/**").hasRole("TEAMLEAD");
+                    registry.requestMatchers("/api/finance/**").hasRole("Finance");
+
 //                    registry.requestMatchers("/api/employee/**").hasAnyRole("EMPLOYEE");
                     registry.anyRequest().authenticated();
                 })
