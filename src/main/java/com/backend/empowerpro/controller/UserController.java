@@ -3,8 +3,10 @@ package com.backend.empowerpro.controller;
 
 import com.backend.empowerpro.dto.Inquiry.InquiryCreationDto;
 import com.backend.empowerpro.dto.Inquiry.InquiryDto;
+import com.backend.empowerpro.dto.employee.EmployeeDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
+import com.backend.empowerpro.service.EmployeeService;
 import com.backend.empowerpro.service.InquiryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final InquiryService inquiryService;
-
+    private final EmployeeService employeeService;
     @PostMapping("/inquiry-create")
     public ResponseEntity<String> creation(@RequestBody InquiryCreationDto inquiryCreationDto){
         return ResponseEntity.ok(inquiryService.createInquiry(inquiryCreationDto));
@@ -40,6 +42,11 @@ public class UserController {
     @DeleteMapping ("/inquiry-delete/{id}")
     public ResponseEntity<String> deleteInquiry(@PathVariable Long id) {
         return ResponseEntity.ok(inquiryService.deleteInquiry(id));
+    }
+
+    @GetMapping("/get-current-user")
+    public ResponseEntity<EmployeeDto> getCurrentUser(){
+        return ResponseEntity.ok(employeeService.findCurrentUser());
     }
 
 }

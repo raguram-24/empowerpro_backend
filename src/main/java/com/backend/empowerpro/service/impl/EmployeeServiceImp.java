@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -143,5 +145,59 @@ public class EmployeeServiceImp implements EmployeeService {
         }
     }
 
+    @Override
+    public EmployeeDto findCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        logger.info("Authentication details: {}", authentication);
+
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+            logger.info("Principal class: {}", principal.getClass().getName());
+
+            String username;
+
+            // Check if principal is a String (which is the username in this case)
+            if (principal instanceof String) {
+                username = (String) principal;
+            } else {
+                logger.error("Principal is not a String or UserDetails. Principal: {}", principal);
+                return null;
+            }
+
+            // Fetch the user from the database using the username
+            Optional<Employee> currentUser = employeeRepo.findByUsername(username);
+
+            if (currentUser.isPresent()) {
+                Employee emp = currentUser.get();
+                EmployeeDto employeeDto = new EmployeeDto(
+                        emp.getId(),
+                        emp.getFirstName(),
+                        emp.getLastName(),
+                        emp.getAddress(),
+                        emp.getEmail(),
+                        emp.getPhoneNumber(),
+                        emp.getWorkTitle(),
+                        emp.getRole(),
+                        emp.getUsername(),
+                        emp.getSummary(),
+                        emp.getSkills(),
+                        emp.getExperiences()
+                );
+                logger.info("DTO Created for user: {}", username);
+                return employeeDto;
+            } else {
+                logger.error("No user found with username: {}", username);
+            }
+        } else {
+            logger.error("No authentication found in the security context.");
+        }
+
+        return null;
+    }
+
+
 
 }
+
+
+
