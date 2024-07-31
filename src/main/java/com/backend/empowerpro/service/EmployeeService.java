@@ -19,4 +19,5 @@ public interface EmployeeService {
     public EmployeeUpdateDto updateEmployee(Long id);
     public EmployeeUpdateDto deleteEmployee(Long id);
     public EmployeeResponseDto login( LoginDto loginDto);
+    public EmployeeDto findCurrentUser();
 }

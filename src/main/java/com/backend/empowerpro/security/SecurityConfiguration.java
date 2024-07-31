@@ -2,6 +2,7 @@ package com.backend.empowerpro.security;
 
 import com.backend.empowerpro.service.impl.EmployeeDetailsService;
 import com.backend.empowerpro.utils.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -46,8 +47,9 @@ public class SecurityConfiguration {
                     registry.anyRequest().authenticated();
                 })
                 .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authenticationProvider(authenticationProvider()).addFilterBefore(
+                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
+                )
                 .build();
     }
 
