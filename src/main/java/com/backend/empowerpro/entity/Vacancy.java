@@ -11,8 +11,6 @@ import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @Data
 @Entity
 @Table(name = "vacancy")
@@ -36,6 +34,12 @@ public class Vacancy {
 
     @Column(name = "responsibilities" ,nullable = false  )
     private String responsibilities;
+
+    @Column(name = "min_salary" ,nullable = false  )
+    private String minSalary;
+
+    @Column(name = "max_salary" ,nullable = false  )
+    private String maxSalary;
 
     @Column(name = "deadLine" ,nullable = false  )
     private Date applicationDeadline;

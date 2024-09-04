@@ -1,10 +1,19 @@
 package com.backend.empowerpro.controller;
 
 
+<<<<<<< Updated upstream
 import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.Employee;
+=======
+
+import com.backend.empowerpro.dto.leave.LeaveCreationDto;
+import com.backend.empowerpro.dto.leave.LeaveDto;
+import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
+import com.backend.empowerpro.dto.vacancy.VacancyDto;
+import com.backend.empowerpro.service.LeaveService;
+>>>>>>> Stashed changes
 import com.backend.empowerpro.service.VacancyService;
 import com.backend.empowerpro.service.impl.EmployeeServiceImp;
 import com.backend.empowerpro.service.impl.VacancyServiceImp;
@@ -19,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HrController {
     private final VacancyService vacancyService;
+    private final LeaveService leaveService;
     @PostMapping("/vacancy-creation")
     public ResponseEntity<String> creation(@RequestBody VacancyCreationDto vacancyCreationDto) {
         return ResponseEntity.ok(vacancyService.createVacancy(vacancyCreationDto));
@@ -26,6 +36,11 @@ public class HrController {
     @GetMapping("/vacancy-get-all")
     public ResponseEntity<List<VacancyDto>> getAllVacancies() {
         return ResponseEntity.ok(vacancyService.getAllVacancies());
+    }
+
+    @GetMapping("/leave-get-all")
+    public ResponseEntity<List<LeaveDto>> getAllLeaves() {
+        return ResponseEntity.ok(leaveService.getAllLeaves());
     }
 
     @GetMapping("/vacancy-get-one/{id}")
@@ -43,6 +58,7 @@ public class HrController {
         return ResponseEntity.ok(vacancyService.deleteVacancy(id));
     }
 
+<<<<<<< Updated upstream
       @PostMapping("/complaint-creation")
     public ResponseEntity<String> creation(@RequestBody ComplaintDto complaintDto) {
         return ResponseEntity.ok(complaintService.createComplaint(complaintDto));
@@ -55,9 +71,27 @@ public class HrController {
     @GetMapping("/complaint-FromMyself")
     public ResponseEntity<List<VacancyDto>> getComplaintsFromMyself() {
         return ResponseEntity.ok(vacancyService.getComplaintsFromMyself());
+=======
+    @PostMapping("/leave-creation")
+    public ResponseEntity<String> leaveCreation(@RequestBody LeaveCreationDto leaveCreationDto) {
+        return ResponseEntity.ok(leaveService.createLeave(leaveCreationDto));
+>>>>>>> Stashed changes
     }
 
 
+    @GetMapping("/leave-get-one/{id}")
+    public ResponseEntity<LeaveDto> getOneLeave(@PathVariable Long id) {
+        return ResponseEntity.ok(leaveService.getOneLeave(id));
+    }
 
+    @PutMapping("/leave-update/{id}")
+    public ResponseEntity<LeaveDto> updateLeave(@PathVariable Long id, @RequestBody LeaveCreationDto leaveCreationDto) {
+        return ResponseEntity.ok(leaveService.updateLeave(id,leaveCreationDto ));
+    }
+
+    @DeleteMapping ("/leave-delete/{id}")
+    public ResponseEntity<String> deleteLeave(@PathVariable Long id) {
+        return ResponseEntity.ok(leaveService.deleteLeave(id));
+    }
 
 }
