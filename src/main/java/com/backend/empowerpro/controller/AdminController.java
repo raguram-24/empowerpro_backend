@@ -1,40 +1,51 @@
 package com.backend.empowerpro.controller;
 
-import com.backend.empowerpro.dto.complaint.ComplaintDto;
-import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
-import com.backend.empowerpro.entity.Employee;
-import com.backend.empowerpro.service.ComplaintService;
-import com.backend.empowerpro.service.impl.EmployeeServiceImp;
+import com.backend.empowerpro.auth.service.AuthService;
+import com.backend.empowerpro.auth.utils.AuthResponse;
+import com.backend.empowerpro.auth.utils.EmployeeResponse;
+import com.backend.empowerpro.auth.utils.RegisterRequest;
+import com.backend.empowerpro.exception.EmptyFileException;
+import com.backend.empowerpro.service.EmployeeService;
+import com.backend.empowerpro.service.SupplierService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
 
 @RestController
-@RequestMapping("api/admin")
+@RequestMapping("/api/v1/admin")
+//@PreAuthorize("hasAuthority('ADMIN')")
 @RequiredArgsConstructor
 public class AdminController {
-//    public final ComplaintService complaintService;
-    private final EmployeeServiceImp employeeServiceImp;
-    @PostMapping("/creation")
-    public ResponseEntity<Employee> creation(@RequestBody EmployeeCreationDto employeeCreationDto) {
-        return ResponseEntity.ok(employeeServiceImp.createEmployee(employeeCreationDto));
+    private final AuthService authService;
+    private final EmployeeService employeeService;
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+    @PreAuthorize("hasAuthority('Admin')")
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@RequestPart String request, @RequestPart MultipartFile file) throws EmptyFileException, IOException {
+        if(file.isEmpty()){
+            throw new EmptyFileException("File is Empty!");
+        }
+        RegisterRequest registerRequest =convertToRegisterRequest(request);
+        return ResponseEntity.ok(authService.register(registerRequest,file));
     }
 
-//    @PostMapping("/complaint-creation")
-//    public ResponseEntity<String> creation(@RequestBody ComplaintDto complaintDto) {
-//        return ResponseEntity.ok(complaintService.createComplaint(complaintDto));
-//    }
-//    @GetMapping("/complaint-ToMe")
-//    public ResponseEntity<List<ComplaintDto>> getComplaintsToMe() {
-//        return ResponseEntity.ok(complaintService.getComplaintsToMe());
-//    }
-//
-//    @GetMapping("/complaint-FromMyself")
-//    public ResponseEntity<List<ComplaintDto>> getComplaintsFromMyself() {
-//        return ResponseEntity.ok(complaintService.getComplaintsFromMyself());
-//    }
+    private RegisterRequest convertToRegisterRequest(String registerRequest) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(registerRequest, RegisterRequest.class);
+    }
+    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeResponse> getOneEmployeeHandler(@PathVariable Long id) {
+        return new ResponseEntity<>(employeeService.getOneEmployee(id), HttpStatus.FOUND);
+    }
 
-    //Delete Employees
 }
