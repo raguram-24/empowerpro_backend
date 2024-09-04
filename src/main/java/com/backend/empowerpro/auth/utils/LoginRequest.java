@@ -1,15 +1,15 @@
-package com.backend.empowerpro.dto;
+package com.backend.empowerpro.auth.utils;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginDto {
+@Builder
+public class LoginRequest {
     private String username;
     private String password;
 }

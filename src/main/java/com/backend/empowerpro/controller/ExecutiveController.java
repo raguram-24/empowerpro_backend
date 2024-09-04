@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/executive")
+@RequestMapping("/api/v1/executive")
 @RequiredArgsConstructor
 public class ExecutiveController {
 //    public final ComplaintService complaintService;

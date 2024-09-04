@@ -3,12 +3,10 @@ package com.backend.empowerpro.service.impl;
 import com.backend.empowerpro.dto.accounts.AccountsCreationDto;
 import com.backend.empowerpro.dto.accounts.AccountsDto;
 import com.backend.empowerpro.entity.Accounts;
-import com.backend.empowerpro.entity.Vacancy;
 import com.backend.empowerpro.exception.AccountsNotFoundException;
 import com.backend.empowerpro.exception.VacancyNotFoundException;
 import com.backend.empowerpro.repository.AccountsRepo;
 import com.backend.empowerpro.service.AccountsService;
-import com.backend.empowerpro.service.EmployeeService;
 import com.backend.empowerpro.utils.AccountsMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -25,7 +23,7 @@ public class AccountsServiceImp implements AccountsService {
     //Initializing of AccountsRepository for DB functions
     private final AccountsRepo accountsRepo;
     //For Debugging Purpose
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+    private static final Logger logger = LoggerFactory.getLogger(Accounts.class);
     //Initializing of Accounts Mapper
     private final AccountsMapper accountsMapper;
 

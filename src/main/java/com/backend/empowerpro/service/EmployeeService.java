@@ -1,23 +1,20 @@
 package com.backend.empowerpro.service;
 
-import com.backend.empowerpro.dto.*;
-import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
-import com.backend.empowerpro.dto.employee.EmployeeDto;
-import com.backend.empowerpro.dto.employee.EmployeeResponseDto;
-import com.backend.empowerpro.dto.employee.EmployeeUpdateDto;
-import com.backend.empowerpro.entity.Employee;
+import com.backend.empowerpro.auth.entity.EmployeeRole;
+import com.backend.empowerpro.auth.utils.EmployeeResponse;
+import com.backend.empowerpro.auth.utils.EmployeeUpdateRequest;
+
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface EmployeeService {
 
-    public List<EmployeeDto> getAllEmployees();
-    public Employee createEmployee( EmployeeCreationDto employeeCreationDto);
-    public EmployeeUpdateDto getOneEmployee(Long id);
-    public EmployeeUpdateDto updateEmployee(Long id);
-    public EmployeeUpdateDto deleteEmployee(Long id);
-    public EmployeeResponseDto login( LoginDto loginDto);
-    public EmployeeDto findCurrentUser();
+    public List<EmployeeResponse> getAllEmployees();
+    public EmployeeResponse getOneEmployee(Long id);
+    public EmployeeResponse deleteEmployee(Long id);
 }
