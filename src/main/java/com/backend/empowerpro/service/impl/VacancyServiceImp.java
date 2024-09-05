@@ -5,7 +5,6 @@ import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.Vacancy;
 import com.backend.empowerpro.exception.VacancyNotFoundException;
 import com.backend.empowerpro.repository.VacancyRepo;
-import com.backend.empowerpro.service.EmployeeService;
 import com.backend.empowerpro.service.VacancyService;
 import com.backend.empowerpro.utils.VacancyMapper;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class VacancyServiceImp implements VacancyService {
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+    private static final Logger logger = LoggerFactory.getLogger(Vacancy.class);
     private final VacancyRepo vacancyRepo;
     private final VacancyMapper vacancyMapper;
     @Override

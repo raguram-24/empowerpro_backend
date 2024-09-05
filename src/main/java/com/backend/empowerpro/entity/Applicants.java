@@ -58,9 +58,6 @@ public class Applicants {
     @Column(name = "resume",nullable = false)
     private String resume;
 
-    @Column(name = "resume_path",nullable = false)
-    private String resumePath;
-
 
     @CreationTimestamp
     @Column(name = "submitted_at", updatable = false)

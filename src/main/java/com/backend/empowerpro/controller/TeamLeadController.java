@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/teamlead")
+@RequestMapping("api/v1/teamlead")
 @RequiredArgsConstructor
 public class TeamLeadController {
 //    public final ComplaintService complaintService;

@@ -2,14 +2,10 @@ package com.backend.empowerpro.service.impl;
 
 import com.backend.empowerpro.dto.applicants.ApplicantsCreationDto;
 import com.backend.empowerpro.dto.applicants.ApplicantsDto;
-import com.backend.empowerpro.entity.Accounts;
 import com.backend.empowerpro.entity.Applicants;
 import com.backend.empowerpro.repository.ApplicantsRepo;
 import com.backend.empowerpro.service.ApplicantsService;
-import com.backend.empowerpro.service.EmployeeService;
 import com.backend.empowerpro.utils.ApplicantsMapper;
-import com.backend.empowerpro.utils.fileOperations.FileDownloadUtil;
-import com.backend.empowerpro.utils.fileOperations.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +21,13 @@ public class ApplicantsServiceImp implements ApplicantsService {
 //    private final FileDownloadUtil fileDownloadUtil;
 //    private final FileUploadUtil fileUploadUtil;
     private final ApplicantsMapper applicantsMapper;
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+    private static final Logger logger = LoggerFactory.getLogger(Applicants.class);
     @Override
     public List<ApplicantsDto> getAllApplicants() {
         try{
             //Fetching All Accounts Details from DB
             List<Applicants> allApplicants = applicantsRepo.findAll();
-            logger.info("All Applicants fetched Successfully");
+//            logger.info("All Applicants fetched Successfully");
             return allApplicants.stream()
                     .map(applicantsMapper::toApplicantsDto)
                     .collect(Collectors.toList());
