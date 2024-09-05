@@ -21,7 +21,8 @@ import java.util.List;
 @RequestMapping("api/finance")
 @RequiredArgsConstructor
 
-public class FinanceController {
+public class
+FinanceController {
     private final SupplierService supplierService;
 
     @PostMapping("/supplier-creation")
