@@ -32,4 +32,13 @@ public class PerformanceEvaluation {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDate createdAt;
+
+    public void setActor(Employee actor) {
+        this.actor = actor;
+    }
+
+    public void setFinalFeedback(String finalFeedback) {
+        this.finalFeedback = finalFeedback;
+    }
+
 }
