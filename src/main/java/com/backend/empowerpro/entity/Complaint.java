@@ -2,7 +2,6 @@ package com.backend.empowerpro.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.Date;
 
