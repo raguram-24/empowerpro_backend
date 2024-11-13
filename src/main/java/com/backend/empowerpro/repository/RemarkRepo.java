@@ -1,15 +1,14 @@
 package com.backend.empowerpro.repository;
 
+import com.backend.empowerpro.auth.entity.Employee;
 import com.backend.empowerpro.entity.Remark;
-import com.backend.empowerpro.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
+@Repository
 public interface RemarkRepo extends JpaRepository<Remark, Long> {
-
-    // Find all remarks for a specific reviewed actor
     List<Remark> findByReviewedActor(Employee reviewedActor);
-
-    // Find all remarks made by a specific reviewer
     List<Remark> findByReviewerActor(Employee reviewerActor);
 }

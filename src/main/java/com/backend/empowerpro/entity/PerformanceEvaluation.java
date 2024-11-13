@@ -1,40 +1,35 @@
 package com.backend.empowerpro.entity;
+import com.backend.empowerpro.auth.entity.Employee;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table(name = "performance_evaluations")
 public class PerformanceEvaluation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean enabled;
+    @OneToOne
+    @JoinColumn(name = "actor_id", nullable = false)
+    private Employee actor;
 
-    // Constructors
-    public PerformanceEvaluation() {}
+    @OneToMany(mappedBy = "reviewedActor", cascade = CascadeType.ALL)
+    private List<Remark> remarks;
 
-    public PerformanceEvaluation(boolean enabled) {
-        this.enabled = enabled;
-    }
+    @Column(name = "final_feedback")
+    private String finalFeedback;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDate createdAt;
 }
