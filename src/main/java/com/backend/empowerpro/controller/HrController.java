@@ -5,6 +5,8 @@ import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
+import com.backend.empowerpro.entity.Complaint;
+import com.backend.empowerpro.repository.ComplaintRepo;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.VacancyService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import java.util.List;
 public class HrController {
     private final VacancyService vacancyService;
     private final ComplaintService complaintService;
+    private final ComplaintRepo complaintRepo;
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
     @PreAuthorize("hasAuthority('HR')")
     @PostMapping("/vacancy-creation")
@@ -54,7 +57,8 @@ public class HrController {
     }
 
     @PostMapping("/complaint-creation")
-    public ResponseEntity<String> createComplaint(
+    public ResponseEntity<ComplaintDto> createComplaint(
+            @RequestParam Long senderId,
             @RequestParam String about,
             @RequestParam String assignedTo,
             @RequestParam String description,
@@ -62,6 +66,7 @@ public class HrController {
 
         ComplaintCreationDto complaintCreationDto = ComplaintCreationDto.builder()
                 .status("PENDING")
+                .senderId(senderId)
                 .about(about)
                 .assignedTo(assignedTo)
                 .description(description)
@@ -74,9 +79,47 @@ public class HrController {
             complaintCreationDto.setFilesToUpload(filePath);
         }
 
-        String savedComplaint = complaintService.createComplaint(complaintCreationDto);
+        ComplaintDto savedComplaint = complaintService.saveComplaint(complaintCreationDto);
         return new ResponseEntity<>(savedComplaint, HttpStatus.CREATED);
     }
+
+    @GetMapping("/complaint-get-one/{id}")
+    public ResponseEntity<ComplaintDto> getOneComplaint(@PathVariable Long id) {
+        return ResponseEntity.ok(complaintService.getOneComplaint(id));
+    }
+
+    @DeleteMapping ("/complaint-delete/{id}")
+    public ResponseEntity<String> deleteComplaint(@PathVariable Long id) {
+        return ResponseEntity.ok(complaintService.deleteComplaint(id));
+    }
+
+    @GetMapping("/assigned-to-hr")
+    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
+        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
+        return ResponseEntity.ok(complaints);
+    }
+
+    //    @PostMapping("/complaint-creation")
+    //    public ResponseEntity<ComplaintDto> saveComplaint(@RequestBody ComplaintCreationDto complaintCreationDto) {
+    //        ComplaintDto savedComplaint = complaintService.saveComplaint(complaintCreationDto);
+    //        return ResponseEntity.status(HttpStatus.CREATED).body(savedComplaint);
+    //    }
+
+//    @GetMapping("/complaint")
+//    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToUser(){
+//        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(1L);
+//        return ResponseEntity.ok(complaints);
+//    }
+
+    @GetMapping("/complaint/{userId}")
+    public ResponseEntity<List<ComplaintDto>> getAllComplaintsByEmployeeId(@PathVariable Long userId) {
+        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(userId);
+        if (complaints.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(complaints);
+    }
+
 
 
 

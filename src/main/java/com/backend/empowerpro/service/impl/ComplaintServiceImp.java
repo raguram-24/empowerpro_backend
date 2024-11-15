@@ -1,5 +1,7 @@
 package com.backend.empowerpro.service.impl;
 
+import com.backend.empowerpro.auth.entity.Employee;
+import com.backend.empowerpro.auth.repository.EmployeeRepository;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.entity.Complaint;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class ComplaintServiceImp implements ComplaintService {
     private static final Logger logger = LoggerFactory.getLogger(Complaint.class);
     private final ComplaintRepo complaintRepo;
+    private final EmployeeRepository employeeRepo;
     private final ComplaintMapper complaintMapper;
 
     private final FileService fileService;
@@ -59,22 +62,45 @@ public class ComplaintServiceImp implements ComplaintService {
     }
 
     @Override
-    public String createComplaint(ComplaintCreationDto complaintCreationDto) {
+    public ComplaintDto saveComplaint(ComplaintCreationDto complaintCreationDto) {
         try {
             // Convert DTO to Complaint entity
+            Employee sender = employeeRepo.findById(complaintCreationDto.getSenderId())
+                    .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + complaintCreationDto.getSenderId()));
             Complaint complaint = complaintMapper.toComplaint(complaintCreationDto);
+            complaint.setSender(sender);
 
             // Save the complaint to the database
             Complaint savedComplaint = complaintRepo.save(complaint);
 
-            logger.info("Complaint has been created successfully: {}", complaint);
-            return "Complaint created successfully with ID: " + complaint.getId();
+            logger.info("Complaint has been created successfully: {}", savedComplaint);
+
+            // Convert the saved Complaint entity to ComplaintDto to return
+            return complaintMapper.toComplaintDto(savedComplaint);
 
         }catch (Exception e) {
             logger.error("An unexpected error occurred while creating complaint: {}", e.getMessage(), e);
             throw new RuntimeException("An unexpected error occurred while creating complaint", e);
         }
     }
+
+//    @Override
+//    public String createComplaint(ComplaintCreationDto complaintCreationDto) {
+//        try {
+//            // Convert DTO to Complaint entity
+//            Complaint complaint = complaintMapper.toComplaint(complaintCreationDto);
+//
+//            // Save the complaint to the database
+//            Complaint savedComplaint = complaintRepo.save(complaint);
+//
+//            logger.info("Complaint has been created successfully: {}", complaint);
+//            return "Complaint created successfully with ID: " + complaint.getId();
+//
+//        }catch (Exception e) {
+//            logger.error("An unexpected error occurred while creating complaint: {}", e.getMessage(), e);
+//            throw new RuntimeException("An unexpected error occurred while creating complaint", e);
+//        }
+//    }
 
 
 
@@ -148,6 +174,20 @@ public class ComplaintServiceImp implements ComplaintService {
     public List<ComplaintDto> getComplaintsAssignedToHR() {
         try{
             List<Complaint> complaints = complaintRepo.findByAssignedTo("HR");
+            logger.info("All Complaints has been Fetched Successfully");
+            return complaints.stream()
+                    .map(complaintMapper::toComplaintDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred while fetching complaints: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
+        }
+    }
+
+    @Override
+    public List<ComplaintDto> getComplaintsAssignedToUser(Long userId) {
+        try{
+            List<Complaint> complaints = complaintRepo.findBySender_Id(userId);
             logger.info("All Complaints has been Fetched Successfully");
             return complaints.stream()
                     .map(complaintMapper::toComplaintDto)

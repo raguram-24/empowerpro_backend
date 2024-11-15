@@ -27,7 +27,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                                 auth.requestMatchers("/api/v1/auth/**", "/file/**").permitAll();
-//                                auth.requestMatchers("/api/v1/admin/**").hasRole("Admin");
+                                auth.requestMatchers("/api/v1/admin/**").permitAll();
                                 auth.requestMatchers("/api/v1/hr/**").permitAll();
                                 auth.requestMatchers("/api/v1/executive/**").hasRole("Executive");
                                 auth.requestMatchers("/api/v1/team-lead/**").hasRole("TeamLead");
