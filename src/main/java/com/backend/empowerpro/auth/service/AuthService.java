@@ -40,7 +40,13 @@ public class AuthService {
     private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 
 
-    public AuthResponse register(RegisterRequest registerRequest) {
+    public AuthResponse register(RegisterRequest registerRequest, MultipartFile file) throws IOException {
+        if( Files.exists(Paths.get(path+ File.separator + file.getOriginalFilename()))){
+            throw new FileExistsException("File Already Exists, Please submit another file");
+        }
+        String uploadedFileName = fileService.uploadFile(path,file);
+        //Set the value of field 'poster' as filename
+        registerRequest.setProfile(uploadedFileName);
         var employee = Employee.builder()
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
@@ -51,11 +57,11 @@ public class AuthService {
                 .role(registerRequest.getRole())
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .profile(uploadedFileName)
                 .build();
 
         Employee savedEmployee = employeeRepository.save(employee);
-        String profileUrl = path + "achchu.jpeg";    // Set a default profile URL if needed
-
+        String profileUrl = baseUrl + "/file/profile/" + savedEmployee.getProfile();
         var accessToken = jwtService.generateToken(savedEmployee);
         var refreshToken = refreshTokenService.createRefreshToken(savedEmployee.getUsername());
 
@@ -71,7 +77,6 @@ public class AuthService {
                 .profileUrl(profileUrl)
                 .build();
     }
-
 
     public AuthResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(

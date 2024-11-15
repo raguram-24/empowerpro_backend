@@ -28,10 +28,14 @@ public class AdminController {
     private final AuthService authService;
     private final EmployeeService employeeService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
-//    @PreAuthorize("hasAuthority('Admin')")
+    @PreAuthorize("hasAuthority('Admin')")
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
-        return ResponseEntity.ok(authService.register(registerRequest));
+    public ResponseEntity<AuthResponse> register(@RequestPart String request, @RequestPart MultipartFile file) throws EmptyFileException, IOException {
+        if(file.isEmpty()){
+            throw new EmptyFileException("File is Empty!");
+        }
+        RegisterRequest registerRequest =convertToRegisterRequest(request);
+        return ResponseEntity.ok(authService.register(registerRequest,file));
     }
 
     private RegisterRequest convertToRegisterRequest(String registerRequest) throws JsonProcessingException {
