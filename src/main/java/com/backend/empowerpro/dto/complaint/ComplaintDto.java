@@ -16,10 +16,10 @@ import java.util.List;
 @Setter
 public class ComplaintDto {
     private Long id;
+    private Long senderId;
     private String status;
     private String about;
     private Date date;
-    private String sender;
     private String assignedTo;
     private String description;
     private String reply;
