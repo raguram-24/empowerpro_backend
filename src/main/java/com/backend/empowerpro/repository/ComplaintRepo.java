@@ -16,6 +16,7 @@ public interface ComplaintRepo extends JpaRepository<Complaint,Long> {
 //    @Query("SELECT c FROM Complaint c WHERE c.sender.id = :userId")
 //    List<Complaint> findComplaintsBySenderId(@Param("userId") Long userId);
     List<Complaint> findBySender_Id(Long userId);
-
+    @Query("SELECT c FROM Complaint c WHERE LOWER(c.about) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    List<Complaint> searchByAbout(@Param("searchTerm") String searchTerm);
 
 }

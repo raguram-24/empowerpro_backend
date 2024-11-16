@@ -120,6 +120,11 @@ public class HrController {
         return ResponseEntity.ok(complaints);
     }
 
+    @GetMapping("/complaint-searchAbout")
+    public List<ComplaintDto> searchComplaints(@RequestParam String query) {
+        return complaintService.searchComplaints(query);
+    }
+
 
 
 
