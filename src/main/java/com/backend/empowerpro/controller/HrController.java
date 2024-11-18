@@ -10,7 +10,11 @@ import com.backend.empowerpro.repository.ComplaintRepo;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.VacancyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
 
@@ -125,6 +131,35 @@ public class HrController {
         return complaintService.searchComplaints(query);
     }
 
+    @GetMapping("/complaint-file")
+    public ResponseEntity<Resource> getComplaintFile(@RequestParam String filePath) throws IOException {
+        try {
+            if (filePath == null || filePath.isEmpty()) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            File file = new File(filePath);
+            if (!file.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Path path = file.toPath();
+            Resource resource = new UrlResource(path.toUri());
+
+            // Detect the file's content type (e.g., PDF, image, etc.)
+            String contentType = Files.probeContentType(path);
+            if (contentType == null) {
+                contentType = "application/octet-stream"; // Fallback type
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getName() + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 
 
 
