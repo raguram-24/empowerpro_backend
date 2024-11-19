@@ -6,10 +6,12 @@ import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.entity.Complaint;
 import com.backend.empowerpro.exception.ComplaintNotFoundException;
+import com.backend.empowerpro.exception.ResourceNotFoundException;
 import com.backend.empowerpro.repository.ComplaintRepo;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.FileService;
 import com.backend.empowerpro.utils.ComplaintMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -199,17 +201,18 @@ public class ComplaintServiceImp implements ComplaintService {
     }
 
     @Override
-    public List<ComplaintDto> searchComplaints(String query) {
-        try{
-            List<Complaint> complaints = complaintRepo.searchByAbout(query);
-            logger.info("All Complaints has been Fetched Successfully");
-            return complaints.stream()
-                    .map(complaintMapper::toComplaintDto)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            logger.error("An unexpected error occurred while fetching complaints: {}", e.getMessage(), e);
-            throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
-        }
+    @Transactional
+    public void replyToComplaint(Long complaintId, String reply) {
+        // Fetch the complaint by ID
+        Complaint complaint = complaintRepo.findById(complaintId)
+                .orElseThrow(() -> new ResourceNotFoundException("Complaint not found with id: " + complaintId));
+
+        // Update the complaint with the reply and status
+        complaint.setReply(reply);
+        complaint.setStatus("SOLVED");
+
+        // Save the updated complaint
+        complaintRepo.save(complaint);
     }
 
 }
