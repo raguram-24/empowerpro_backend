@@ -17,5 +17,5 @@ public interface ComplaintService {
     public String deleteComplaint(Long id);
     public List<ComplaintDto> getComplaintsAssignedToHR();
     public List<ComplaintDto> getComplaintsAssignedToUser(Long userId);
-    public List<ComplaintDto> searchComplaints(String query);
+    void replyToComplaint(Long complaintId, String reply);
 }

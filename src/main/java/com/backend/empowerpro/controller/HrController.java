@@ -9,6 +9,7 @@ import com.backend.empowerpro.entity.Complaint;
 import com.backend.empowerpro.repository.ComplaintRepo;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.VacancyService;
+import com.backend.empowerpro.utils.ReplyRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -126,11 +127,6 @@ public class HrController {
         return ResponseEntity.ok(complaints);
     }
 
-    @GetMapping("/complaint-searchAbout")
-    public List<ComplaintDto> searchComplaints(@RequestParam String query) {
-        return complaintService.searchComplaints(query);
-    }
-
     @GetMapping("/complaint-file")
     public ResponseEntity<Resource> getComplaintFile(@RequestParam String filePath) throws IOException {
         try {
@@ -161,7 +157,12 @@ public class HrController {
         }
     }
 
-
-
+    @PostMapping("/complaint-reply/{id}")
+    public ResponseEntity<String> replyToComplaint(
+            @PathVariable Long id,
+            @RequestBody ReplyRequest replyRequest) {
+        complaintService.replyToComplaint(id, replyRequest.getReply());
+        return ResponseEntity.ok("Reply sent successfully!");
+    }
 
 }
