@@ -22,7 +22,8 @@ import java.util.List;
 @RequestMapping("api/v1/finance")
 @RequiredArgsConstructor
 
-public class FinanceController {
+public class
+FinanceController {
     private final SupplierService supplierService;
     @PreAuthorize("hasAuthority('Finance')")
     @PostMapping("/supplier-creation")
