@@ -1,17 +1,21 @@
 package com.backend.empowerpro.service;
 
+import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
-import com.backend.empowerpro.entity.Complaint;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ComplaintService {
-    List<ComplaintDto> getAllComplaints();
-
-    List<ComplaintDto> getComplaintsToMe();
-    List<ComplaintDto> getComplaintsFromMyself();
-    String createComplaint(ComplaintDto complaintDto);
-    ComplaintDto getOneComplaint(Long id);
-    ComplaintDto updateComplaint(Long id, ComplaintDto complaintDto);
-    String deleteComplaint(Long id);
+    public List<ComplaintDto> getAllComplaints();
+    public List<ComplaintDto> getComplaintsToMe();
+    public List<ComplaintDto> getComplaintsFromMyself();
+//    public String createComplaint(ComplaintCreationDto complaintCreationDto);
+    public ComplaintDto saveComplaint(ComplaintCreationDto complaintCreationDto);
+    public ComplaintDto getOneComplaint(Long id);
+    //    public ComplaintDto updateComplaint(Long id, ComplaintCreationDto complaintCreationDto);
+    public String deleteComplaint(Long id);
+    public List<ComplaintDto> getComplaintsAssignedToHR();
+    public List<ComplaintDto> getComplaintsAssignedToUser(Long userId);
+    void replyToComplaint(Long complaintId, String reply);
 }

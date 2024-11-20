@@ -1,16 +1,31 @@
 package com.backend.empowerpro.controller;
 
 
+import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
+import com.backend.empowerpro.entity.Complaint;
+import com.backend.empowerpro.repository.ComplaintRepo;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.VacancyService;
+import com.backend.empowerpro.utils.ReplyRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -18,8 +33,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class HrController {
-//    public final ComplaintService complaintService;
     private final VacancyService vacancyService;
+    private final ComplaintService complaintService;
+    private final ComplaintRepo complaintRepo;
+    private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
     @PreAuthorize("hasAuthority('HR')")
     @PostMapping("/vacancy-creation")
     public ResponseEntity<String> creation(@RequestBody VacancyCreationDto vacancyCreationDto) {
@@ -46,21 +63,106 @@ public class HrController {
         return ResponseEntity.ok(vacancyService.deleteVacancy(id));
     }
 
-//      @PostMapping("/complaint-creation")
-//    public ResponseEntity<String> creation(@RequestBody ComplaintDto complaintDto) {
-//        return ResponseEntity.ok(complaintService.createComplaint(complaintDto));
-//    }
-//    @GetMapping("/complaint-ToMe")
-//    public ResponseEntity<List<ComplaintDto>> getComplaintsToMe() {
-//        return ResponseEntity.ok(complaintService.getComplaintsToMe());
-//    }
-//
-//    @GetMapping("/complaint-FromMyself")
-//    public ResponseEntity<List<ComplaintDto>> getComplaintsFromMyself() {
-//        return ResponseEntity.ok(complaintService.getComplaintsFromMyself());
+    @PostMapping("/complaint-creation")
+    public ResponseEntity<ComplaintDto> createComplaint(
+            @RequestParam Long senderId,
+            @RequestParam String about,
+            @RequestParam String assignedTo,
+            @RequestParam String description,
+            @RequestParam(required = false) MultipartFile file) throws IOException {
+
+        ComplaintCreationDto complaintCreationDto = ComplaintCreationDto.builder()
+                .status("PENDING")
+                .senderId(senderId)
+                .about(about)
+                .assignedTo(assignedTo)
+                .description(description)
+                .date(new Date())
+                .build();
+
+        if (file != null && !file.isEmpty()) {
+            String filePath = UPLOAD_DIR_COMPLAINTS + file.getOriginalFilename();
+            file.transferTo(new File(filePath));
+            complaintCreationDto.setFilesToUpload(filePath);
+        }
+
+        ComplaintDto savedComplaint = complaintService.saveComplaint(complaintCreationDto);
+        return new ResponseEntity<>(savedComplaint, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/complaint-get-one/{id}")
+    public ResponseEntity<ComplaintDto> getOneComplaint(@PathVariable Long id) {
+        return ResponseEntity.ok(complaintService.getOneComplaint(id));
+    }
+
+    @DeleteMapping ("/complaint-delete/{id}")
+    public ResponseEntity<String> deleteComplaint(@PathVariable Long id) {
+        return ResponseEntity.ok(complaintService.deleteComplaint(id));
+    }
+
+    @GetMapping("/assigned-to-hr")
+    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
+        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
+        return ResponseEntity.ok(complaints);
+    }
+
+    //    @PostMapping("/complaint-creation")
+    //    public ResponseEntity<ComplaintDto> saveComplaint(@RequestBody ComplaintCreationDto complaintCreationDto) {
+    //        ComplaintDto savedComplaint = complaintService.saveComplaint(complaintCreationDto);
+    //        return ResponseEntity.status(HttpStatus.CREATED).body(savedComplaint);
+    //    }
+
+//    @GetMapping("/complaint")
+//    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToUser(){
+//        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(1L);
+//        return ResponseEntity.ok(complaints);
 //    }
 
+    @GetMapping("/complaint/{userId}")
+    public ResponseEntity<List<ComplaintDto>> getAllComplaintsByEmployeeId(@PathVariable Long userId) {
+        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(userId);
+        if (complaints.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(complaints);
+    }
 
+    @GetMapping("/complaint-file")
+    public ResponseEntity<Resource> getComplaintFile(@RequestParam String filePath) throws IOException {
+        try {
+            if (filePath == null || filePath.isEmpty()) {
+                return ResponseEntity.badRequest().body(null);
+            }
 
+            File file = new File(filePath);
+            if (!file.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Path path = file.toPath();
+            Resource resource = new UrlResource(path.toUri());
+
+            // Detect the file's content type (e.g., PDF, image, etc.)
+            String contentType = Files.probeContentType(path);
+            if (contentType == null) {
+                contentType = "application/octet-stream"; // Fallback type
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getName() + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @PostMapping("/complaint-reply/{id}")
+    public ResponseEntity<String> replyToComplaint(
+            @PathVariable Long id,
+            @RequestBody ReplyRequest replyRequest) {
+        complaintService.replyToComplaint(id, replyRequest.getReply());
+        return ResponseEntity.ok("Reply sent successfully!");
+    }
 
 }

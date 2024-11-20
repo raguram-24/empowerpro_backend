@@ -1,8 +1,8 @@
 package com.backend.empowerpro.entity;
 
+import com.backend.empowerpro.auth.entity.Employee;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.Date;
 
@@ -17,6 +17,10 @@ public class Complaint {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "sender_id", nullable = false)
+    private Employee sender;
+
     @Column(name = "status")
     private String status;
 
@@ -26,8 +30,6 @@ public class Complaint {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date")
     private Date date;
-
-    private String sender;
 
     @Column(name = "assigned_to")
     private String assignedTo;
