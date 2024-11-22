@@ -27,12 +27,13 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/v1/auth/**", "/file/**").permitAll();
-//                                auth.requestMatchers("/api/v1/admin/**").hasRole("Admin");
+                    auth.requestMatchers("/api/v1/admin/**").permitAll();
                     auth.requestMatchers("/api/v1/hr/**").permitAll();
-                    auth.requestMatchers("/api/v1/executive/**").hasRole("Executive");
-                    auth.requestMatchers("/api/v1/team-lead/**").hasRole("TeamLead");
+                    auth.requestMatchers("/employee/**").permitAll();
+                    auth.requestMatchers("/api/v1/executive/**").permitAll();
+                    auth.requestMatchers("/api/v1/team-lead/**").permitAll();
 //                                auth.requestMatchers("/api/v1/finance/**").hasRole("Finance");
-                    auth.anyRequest().authenticated();
+//                                auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
