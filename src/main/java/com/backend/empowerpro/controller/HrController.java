@@ -3,11 +3,15 @@ package com.backend.empowerpro.controller;
 
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
+import com.backend.empowerpro.dto.leave.LeaveCreationDto;
+import com.backend.empowerpro.dto.leave.LeaveDto;
+import com.backend.empowerpro.dto.leave.TodayLeaveDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.Complaint;
 import com.backend.empowerpro.repository.ComplaintRepo;
 import com.backend.empowerpro.service.ComplaintService;
+import com.backend.empowerpro.service.LeaveService;
 import com.backend.empowerpro.service.VacancyService;
 import com.backend.empowerpro.utils.ReplyRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +39,7 @@ import java.util.List;
 public class HrController {
     private final VacancyService vacancyService;
     private final ComplaintService complaintService;
+    private final LeaveService leaveService;
     private final ComplaintRepo complaintRepo;
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
     @PreAuthorize("hasAuthority('HR')")
@@ -164,5 +169,38 @@ public class HrController {
         complaintService.replyToComplaint(id, replyRequest.getReply());
         return ResponseEntity.ok("Reply sent successfully!");
     }
+
+    @PostMapping("/leave-creation")
+    public ResponseEntity<String> applyLeave(@RequestBody LeaveCreationDto leaveCreationDto) {
+        leaveService.saveLeave(leaveCreationDto);
+        return ResponseEntity.ok("Leave applied successfully!");
+    }
+
+    @GetMapping("/leave/{userId}")
+    public ResponseEntity<List<LeaveDto>> getAllLeavedByUser(@PathVariable Long userId) {
+        List<LeaveDto> leaves = leaveService.getLeavesByUser(userId);
+        if (leaves.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(leaves);
+    }
+
+    @GetMapping("/available-leaves/{userId}")
+    public ResponseEntity<Integer> getAllLeavesByUser(@PathVariable Long userId) {
+        int availableLeaves = leaveService.getAvailableLeaves(userId);
+        return ResponseEntity.ok(availableLeaves); // Wrap the integer in ResponseEntity with HTTP 200 status
+    }
+
+    @GetMapping("/leave-today")
+    public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
+        List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
+        return ResponseEntity.ok(todayLeaves);
+    }
+
+
+
+
+
+
 
 }

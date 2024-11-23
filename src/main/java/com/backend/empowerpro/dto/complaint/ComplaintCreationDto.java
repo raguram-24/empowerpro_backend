@@ -12,7 +12,7 @@ import java.util.Date;
 public class ComplaintCreationDto {
     private Long id;
     private Long senderId;
-    private String status = "Pending";
+    private String status = "PENDING";
     private String about;
     private Date date;// Subject of the complaint// You may want to include this field for the sender's details
     private String assignedTo; // The person to whom the complaint is assigned
