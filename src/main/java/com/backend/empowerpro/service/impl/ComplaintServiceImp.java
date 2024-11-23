@@ -4,10 +4,12 @@ import com.backend.empowerpro.auth.entity.Employee;
 import com.backend.empowerpro.auth.repository.EmployeeRepository;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
+import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.entity.Complaint;
 import com.backend.empowerpro.exception.ComplaintNotFoundException;
 import com.backend.empowerpro.exception.ResourceNotFoundException;
 import com.backend.empowerpro.repository.ComplaintRepo;
+import com.backend.empowerpro.repository.LeaveRepo;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.FileService;
 import com.backend.empowerpro.utils.ComplaintMapper;
@@ -214,5 +216,8 @@ public class ComplaintServiceImp implements ComplaintService {
         // Save the updated complaint
         complaintRepo.save(complaint);
     }
+
+
+
 
 }
