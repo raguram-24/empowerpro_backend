@@ -30,7 +30,9 @@ public class SecurityConfiguration {
 //                                auth.requestMatchers("/api/v1/admin/**").hasRole("Admin");
                                 auth.requestMatchers("/api/v1/hr/**").permitAll();
                                 auth.requestMatchers("/api/v1/executive/**").hasRole("Executive");
-                                auth.requestMatchers("/api/v1/team-lead/**").hasRole("TeamLead");
+                                auth.requestMatchers("/api/v1/team-lead/**").permitAll();
+                                auth.requestMatchers("/api/teamlead/markcalendar-create" ).permitAll();
+
 //                                auth.requestMatchers("/api/v1/finance/**").hasRole("Finance");
                                 auth.anyRequest().authenticated();
                 })

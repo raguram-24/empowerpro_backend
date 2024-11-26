@@ -33,4 +33,5 @@ public class Inquiry {
     @Column(name = "submitted_at", updatable = false)
     private LocalDateTime submittedAt;
 
+
 }
