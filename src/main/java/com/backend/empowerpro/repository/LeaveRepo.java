@@ -17,4 +17,7 @@ public interface LeaveRepo extends JpaRepository<Leave, Long> {
             "JOIN l.employee e " +
             "WHERE l.startDate <= :today AND l.endDate >= :today")
     List<Object[]> findLeavesForToday(@Param("today") LocalDate today);
+
+    @Query("SELECT l FROM Leave l WHERE (:status IS NULL OR CAST(l.status AS string) = :status) AND l.startDate >= :startDate")
+    List<Leave> findByStatusAndDateRange(@Param("status") String status, @Param("startDate") LocalDate startDate);
 }
