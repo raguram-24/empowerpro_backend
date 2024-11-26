@@ -21,5 +21,4 @@ public class EventCreationDto {
     private String estimatedCost;
     @NotBlank(message = "Name should not be blank")
     private String image;
-    private Long createdBy;
 }

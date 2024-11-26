@@ -4,9 +4,10 @@ import com.backend.empowerpro.auth.entity.Employee;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @RequiredArgsConstructor
@@ -32,10 +33,12 @@ public class Event {
     private String estimatedCost;
     @Column(nullable = false)
     private String image;
-    @Column(nullable = false)
+
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private Employee createdBy;
+    @CreationTimestamp
     private LocalDate createdAt;
+    @UpdateTimestamp
     private LocalDate updatedAt;
 }

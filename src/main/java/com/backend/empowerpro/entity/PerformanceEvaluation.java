@@ -23,8 +23,9 @@ public class PerformanceEvaluation {
     @JoinColumn(name = "actor_id", nullable = false)
     private Employee actor;
 
-    @OneToMany(mappedBy = "reviewedActor", cascade = CascadeType.ALL)
-    private List<Remark> remarks;
+//    @OneToMany(mappedBy = "reviewedActor", cascade = CascadeType.ALL)
+//    @JoinColumn()
+//    private List<Remark> remarks;
 
     @Column(name = "final_feedback")
     private String finalFeedback;

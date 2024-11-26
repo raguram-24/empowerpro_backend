@@ -3,6 +3,8 @@ package com.backend.empowerpro.controller;
 
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
+import com.backend.empowerpro.dto.events.EventCreationDto;
+import com.backend.empowerpro.dto.events.EventDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
@@ -11,10 +13,12 @@ import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.Complaint;
 import com.backend.empowerpro.repository.ComplaintRepo;
 import com.backend.empowerpro.service.ComplaintService;
+import com.backend.empowerpro.service.EventService;
 import com.backend.empowerpro.service.LeaveService;
 import com.backend.empowerpro.service.VacancyService;
 import com.backend.empowerpro.utils.ReplyRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -37,11 +41,17 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class HrController {
+    private final EventService eventService;
     private final VacancyService vacancyService;
     private final ComplaintService complaintService;
     private final LeaveService leaveService;
     private final ComplaintRepo complaintRepo;
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
+    @Value("${project.events}")
+    private final String EVENTS_DIR;
+    String rootPath = System.getProperty("user.dir");
+
+
     @PreAuthorize("hasAuthority('HR')")
     @PostMapping("/vacancy-creation")
     public ResponseEntity<String> creation(@RequestBody VacancyCreationDto vacancyCreationDto) {
@@ -195,6 +205,17 @@ public class HrController {
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
         return ResponseEntity.ok(todayLeaves);
+    }
+
+    @PostMapping("/event-creation")
+    public ResponseEntity<EventDto> createEvent(EventCreationDto req, MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            String filePath = rootPath+ File.separator + EVENTS_DIR + file.getOriginalFilename();
+            System.out.println(filePath);
+            file.transferTo(new File(filePath));
+            req.setImage(filePath);
+        }
+        return ResponseEntity.ok(eventService.createEvent(req));
     }
 
 
