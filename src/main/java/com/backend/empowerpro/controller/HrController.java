@@ -177,7 +177,7 @@ public class HrController {
     }
 
     @GetMapping("/leave/{userId}")
-    public ResponseEntity<List<LeaveDto>> getAllLeavedByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<LeaveDto>> getAllLeavesByUserId(@PathVariable Long userId) {
         List<LeaveDto> leaves = leaveService.getLeavesByUser(userId);
         if (leaves.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -196,6 +196,16 @@ public class HrController {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
         return ResponseEntity.ok(todayLeaves);
     }
+
+
+    @GetMapping("/leave-get-filtered")
+    public ResponseEntity<List<LeaveDto>> getAllLeaves(
+            @RequestParam(required = false) String timePeriod,
+            @RequestParam(required = false) String status) {
+        List<LeaveDto> leaves = leaveService.getLeavesByFilter(timePeriod, status);
+        return ResponseEntity.ok(leaves);
+    }
+
 
 
 
