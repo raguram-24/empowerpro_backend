@@ -109,16 +109,6 @@ public class FinanceController {
         return ResponseEntity.ok(accountsService.getAllAccountsByExpense());
     }
 
-//    @PostMapping("/complaint-creation")
-//    public ResponseEntity<String> creation(@RequestBody ComplaintDto complaintDto) {
-//        return ResponseEntity.ok(complaintService.createComplaint(complaintDto));
-//    }
-//
-//    @GetMapping("/complaint-FromMyself")
-//    public ResponseEntity<List<ComplaintDto>> getComplaintsFromMyself() {
-//        return ResponseEntity.ok(complaintService.getComplaintsFromMyself());
-//    }
-
     @PostMapping("/leave-creation")
     public ResponseEntity<String> applyLeave(@RequestBody LeaveCreationDto leaveCreationDto) {
         leaveService.saveLeave(leaveCreationDto);
@@ -168,17 +158,6 @@ public class FinanceController {
         return ResponseEntity.ok(complaints);
     }
 
-    //    @PostMapping("/complaint-creation")
-    //    public ResponseEntity<ComplaintDto> saveComplaint(@RequestBody ComplaintCreationDto complaintCreationDto) {
-    //        ComplaintDto savedComplaint = complaintService.saveComplaint(complaintCreationDto);
-    //        return ResponseEntity.status(HttpStatus.CREATED).body(savedComplaint);
-    //    }
-
-//    @GetMapping("/complaint")
-//    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToUser(){
-//        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(1L);
-//        return ResponseEntity.ok(complaints);
-//    }
 
     @GetMapping("/complaint/{userId}")
     public ResponseEntity<List<ComplaintDto>> getAllComplaintsByEmployeeId(@PathVariable Long userId) {
@@ -249,11 +228,4 @@ public class FinanceController {
     }
 
 
-    @GetMapping("/leave-get-filtered")
-    public ResponseEntity<List<LeaveDto>> getAllLeaves(
-            @RequestParam(required = false) String timePeriod,
-            @RequestParam(required = false) String status) {
-        List<LeaveDto> leaves = leaveService.getLeavesByFilter(timePeriod, status);
-        return ResponseEntity.ok(leaves);
-    }
 }
