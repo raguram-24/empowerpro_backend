@@ -21,25 +21,25 @@ public class RefreshTokenService {
 
 
 
-    public RefreshToken createRefreshToken(String username) {
-        Employee employee = employeeRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Employee not found with username : " + username));
-
-        RefreshToken refreshToken = employee.getRefreshToken();
-
-        if (refreshToken == null) {
-            long refreshTokenValidity = 30 * 1000;
-            refreshToken = RefreshToken.builder()
-                    .refreshToken(UUID.randomUUID().toString())
-                    .expirationTime(Instant.now().plusMillis(refreshTokenValidity))
-                    .employee(employee)
-                    .build();
-
-            refreshTokenRepository.save(refreshToken);
-        }
-
-        return refreshToken;
-    }
+//    public RefreshToken createRefreshToken(String username) {
+//        Employee employee = employeeRepository.findByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("Employee not found with username : " + username));
+//
+//        RefreshToken refreshToken = employee.getRefreshToken();
+//
+//        if (refreshToken == null) {
+//            long refreshTokenValidity = 30 * 1000;
+//            refreshToken = RefreshToken.builder()
+//                    .refreshToken(UUID.randomUUID().toString())
+//                    .expirationTime(Instant.now().plusMillis(refreshTokenValidity))
+//                    .employee(employee)
+//                    .build();
+//
+//            refreshTokenRepository.save(refreshToken);
+//        }
+//
+//        return refreshToken;
+//    }
 
     public RefreshToken verifyRefreshToken(String refreshToken) {
         RefreshToken refToken = refreshTokenRepository.findByRefreshToken(refreshToken)

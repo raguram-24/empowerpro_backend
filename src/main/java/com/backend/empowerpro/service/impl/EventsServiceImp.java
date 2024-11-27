@@ -40,7 +40,17 @@ public class EventsServiceImp implements EventService {
             newEvent.setCreatedBy(employee);
             eventRepo.save(newEvent);
             logger.info("New Event Created with" + newEvent);
-            return eventMapper.toEventDto(newEvent);
+            return new EventDto(newEvent.getId(),
+                    newEvent.getName(),
+                    newEvent.getReason(),
+                    newEvent.getLocation(),
+                    newEvent.getDate(),
+                    newEvent.getTime(),
+                    newEvent.getEstimatedCost(),
+                    newEvent.getImage(),
+                    employee,
+                    newEvent.getCreatedAt(),
+                    newEvent.getUpdatedAt());
         }catch (Exception e){
             logger.error("Error Has been Occurred {}",e.getMessage());
             throw new RuntimeException("An unexpected error occurred while fetching Accounts", e);

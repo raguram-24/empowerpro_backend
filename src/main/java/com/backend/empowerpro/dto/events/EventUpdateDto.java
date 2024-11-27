@@ -8,6 +8,6 @@ public class EventUpdateDto {
     private String location;
     private LocalDate date;
     private String time;
-    private String estimatedCost;
+    private Float estimatedCost;
     private String image;
 }

@@ -30,10 +30,9 @@ public class Event {
     @Column(nullable = false)
     private String time;
     @Column(nullable = false)
-    private String estimatedCost;
+    private Float estimatedCost;
     @Column(nullable = false)
     private String image;
-
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private Employee createdBy;

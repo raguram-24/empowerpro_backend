@@ -1,24 +1,27 @@
 package com.backend.empowerpro.dto.events;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 
 @Data
+@AllArgsConstructor
 public class EventCreationDto {
     @NotBlank(message = "Name should not be blank")
     private String name;
-    @NotBlank(message = "Name should not be blank")
+    @NotBlank(message = "reason should not be blank")
     private String reason;
-    @NotBlank(message = "Name should not be blank")
+    @NotBlank(message = "location should not be blank")
     private String location;
-    @NotBlank(message = "Name should not be blank")
+    @NotNull(message = "date should not be blank")
     private LocalDate date;
-    @NotBlank(message = "Name should not be blank")
+    @NotBlank(message = "time should not be blank")
     private String time;
-    @NotBlank(message = "Name should not be blank")
-    private String estimatedCost;
-    @NotBlank(message = "Name should not be blank")
+    @NotNull(message = "Cost cannot be empty")
+    private Float estimatedCost;
+    @NotBlank(message = "image should not be blank")
     private String image;
 }

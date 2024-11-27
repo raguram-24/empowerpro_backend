@@ -17,6 +17,7 @@ import com.backend.empowerpro.service.EventService;
 import com.backend.empowerpro.service.LeaveService;
 import com.backend.empowerpro.service.VacancyService;
 import com.backend.empowerpro.utils.ReplyRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -48,7 +49,7 @@ public class HrController {
     private final ComplaintRepo complaintRepo;
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
     @Value("${project.events}")
-    private final String EVENTS_DIR;
+    private String EVENTS_DIR;
     String rootPath = System.getProperty("user.dir");
 
 
@@ -207,16 +208,21 @@ public class HrController {
         return ResponseEntity.ok(todayLeaves);
     }
 
-    @PostMapping("/event-creation")
-    public ResponseEntity<EventDto> createEvent(EventCreationDto req, MultipartFile file) throws IOException {
+    @PostMapping(value = "/event-creation", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EventDto> createEvent(
+            @RequestPart("data") EventCreationDto req,  // JSON data as part of the form
+            @RequestPart("file") MultipartFile file) throws IOException {  // File upload
+
         if (file != null && !file.isEmpty()) {
-            String filePath = rootPath+ File.separator + EVENTS_DIR + file.getOriginalFilename();
-            System.out.println(filePath);
+            String filePath = rootPath + File.separator + EVENTS_DIR + file.getOriginalFilename();
             file.transferTo(new File(filePath));
-            req.setImage(filePath);
+            req.setImage(filePath);  // Save the file path in the event DTO
         }
+
         return ResponseEntity.ok(eventService.createEvent(req));
     }
+
 
 
 

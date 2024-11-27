@@ -109,11 +109,11 @@ public class AuthService {
         String profileUrl = path + "achchu.jpeg";    // Set a default profile URL if needed
 
         var accessToken = jwtService.generateToken(savedEmployee);
-        var refreshToken = refreshTokenService.createRefreshToken(savedEmployee.getUsername());
+//        var refreshToken = refreshTokenService.createRefreshToken(savedEmployee.getUsername());
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken.getRefreshToken())
+//                .refreshToken(refreshToken.getRefreshToken())
                 .userId(savedEmployee.getId())
                 .WorkTitle(savedEmployee.getWorkTitle())
                 .firstName(savedEmployee.getFirstName())
@@ -135,11 +135,11 @@ public class AuthService {
         var employee = employeeRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Employee not found!"));
         String profileUrl = baseUrl + "/file/profile/" + employee.getProfile();
         var accessToken = jwtService.generateToken(employee);
-        var refreshToken = refreshTokenService.createRefreshToken(loginRequest.getUsername());
+//        var refreshToken = refreshTokenService.createRefreshToken(loginRequest.getUsername());
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken.getRefreshToken())
+//                .refreshToken(refreshToken.getRefreshToken())
                 .userId(employee.getId())
                 .WorkTitle(employee.getWorkTitle())
                 .firstName(employee.getFirstName())

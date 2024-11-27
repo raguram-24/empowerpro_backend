@@ -76,11 +76,11 @@ public class Employee implements UserDetails {
     @Column(name = "experiences", length = 50000)
     private String experiences;
 
-    @OneToOne(mappedBy = "employee")
-    private RefreshToken refreshToken;
+//    @OneToOne(mappedBy = "employee")
+//    private RefreshToken refreshToken;
 
-    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
-    private LeaveBalance leaveBalance;
+//    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
+//    private LeaveBalance leaveBalance;
 
     private String profile;
 
