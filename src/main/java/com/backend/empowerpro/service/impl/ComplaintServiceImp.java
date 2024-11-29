@@ -174,19 +174,19 @@ public class ComplaintServiceImp implements ComplaintService {
     }
 
 
-    @Override
-    public List<ComplaintDto> getComplaintsAssignedToHR() {
-        try{
-            List<Complaint> complaints = complaintRepo.findByAssignedTo("HR");
-            logger.info("All Complaints has been Fetched Successfully");
-            return complaints.stream()
-                    .map(complaintMapper::toComplaintDto)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            logger.error("An unexpected error occurred while fetching complaints: {}", e.getMessage(), e);
-            throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
-        }
-    }
+//    @Override
+//    public List<ComplaintDto> getComplaintsAssignedToHR() {
+//        try{
+//            List<Complaint> complaints = complaintRepo.findByAssignedTo("HR");
+//            logger.info("All Complaints has been Fetched Successfully");
+//            return complaints.stream()
+//                    .map(complaintMapper::toComplaintDto)
+//                    .collect(Collectors.toList());
+//        } catch (Exception e) {
+//            logger.error("An unexpected error occurred while fetching complaints: {}", e.getMessage(), e);
+//            throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
+//        }
+//    }
 
     @Override
     public List<ComplaintDto> getComplaintsAssignedToUser(Long userId) {
@@ -217,7 +217,19 @@ public class ComplaintServiceImp implements ComplaintService {
         complaintRepo.save(complaint);
     }
 
-
+    @Override
+    public List<ComplaintDto> getComplaintsAssignedToRole(String role) {
+        try{
+            List<Complaint> complaints = complaintRepo.findByAssignedTo(role);
+            logger.info("All Complaints has been Fetched Successfully");
+            return complaints.stream()
+                    .map(complaintMapper::toComplaintDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred while fetching complaints: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
+        }
+    }
 
 
 }

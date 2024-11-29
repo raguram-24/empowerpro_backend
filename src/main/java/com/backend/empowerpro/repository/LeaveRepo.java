@@ -13,11 +13,12 @@ import java.util.List;
 
 public interface LeaveRepo extends JpaRepository<Leave, Long> {
     List<Leave> findByEmployee_Id(Long userId);
+
     @Query("SELECT l.endDate, e.id, e.firstName, e.lastName,  CAST(e.role AS string) FROM Leave l " +
             "JOIN l.employee e " +
             "WHERE l.startDate <= :today AND l.endDate >= :today")
     List<Object[]> findLeavesForToday(@Param("today") LocalDate today);
 
-    @Query("SELECT l FROM Leave l WHERE (:status IS NULL OR CAST(l.status AS string) = :status) AND l.startDate >= :startDate")
-    List<Leave> findByStatusAndDateRange(@Param("status") String status, @Param("startDate") LocalDate startDate);
+    @Query("SELECT l FROM Leave l WHERE l.employee.id != :loggedInEmployeeId")
+    List<Leave> findLeavesAssignedToRole(@Param("loggedInEmployeeId") Long loggedInEmployeeId);
 }
