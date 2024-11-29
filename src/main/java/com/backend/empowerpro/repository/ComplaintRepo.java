@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface ComplaintRepo extends JpaRepository<Complaint,Long> {
-    List<Complaint> findByAssignedTo(String assignedTo);
+    List<Complaint> findByAssignedTo(String role);
 //    @Query("SELECT c FROM Complaint c WHERE c.sender.id = :userId")
 //    List<Complaint> findComplaintsBySenderId(@Param("userId") Long userId);
     List<Complaint> findBySender_Id(Long userId);
