@@ -2,6 +2,7 @@ package com.backend.empowerpro.auth.entity;
 
 
 
+import com.backend.empowerpro.entity.LeaveBalance;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -77,6 +78,9 @@ public class Employee implements UserDetails {
 
     @OneToOne(mappedBy = "employee")
     private RefreshToken refreshToken;
+
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
+    private LeaveBalance leaveBalance;
 
     private String profile;
 

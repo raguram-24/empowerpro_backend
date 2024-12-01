@@ -5,7 +5,9 @@ import com.backend.empowerpro.auth.repository.EmployeeRepository;
 import com.backend.empowerpro.auth.utils.AuthResponse;
 import com.backend.empowerpro.auth.utils.LoginRequest;
 import com.backend.empowerpro.auth.utils.RegisterRequest;
+import com.backend.empowerpro.entity.LeaveBalance;
 import com.backend.empowerpro.exception.FileExistsException;
+import com.backend.empowerpro.repository.LeaveBalanceRepo;
 import com.backend.empowerpro.service.EmployeeService;
 import com.backend.empowerpro.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
+    private final LeaveBalanceRepo leaveBalanceRepo;
     @Value("${project.employeeProfile}")
     private String path;
     @Value("${base.url}")
@@ -40,28 +43,78 @@ public class AuthService {
     private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
 
 
-    public AuthResponse register(RegisterRequest registerRequest, MultipartFile file) throws IOException {
-        if( Files.exists(Paths.get(path+ File.separator + file.getOriginalFilename()))){
-            throw new FileExistsException("File Already Exists, Please submit another file");
-        }
-        String uploadedFileName = fileService.uploadFile(path,file);
-        //Set the value of field 'poster' as filename
-        registerRequest.setProfile(uploadedFileName);
+//    public AuthResponse register(RegisterRequest registerRequest, MultipartFile file) throws IOException {
+//        if( Files.exists(Paths.get(path+ File.separator + file.getOriginalFilename()))){
+//            throw new FileExistsException("File Already Exists, Please submit another file");
+//        }
+//        String uploadedFileName = fileService.uploadFile(path,file);
+//        //Set the value of field 'poster' as filename
+//        registerRequest.setProfile(uploadedFileName);
+//        var employee = Employee.builder()
+//                .firstName(registerRequest.getFirstName())
+//                .lastName(registerRequest.getLastName())
+//                .address(registerRequest.getAddress())
+//                .email(registerRequest.getEmail())
+//                .phoneNumber(registerRequest.getPhoneNumber())
+//                .workTitle(registerRequest.getWorkTitle())
+//                .role(registerRequest.getRole())
+//                .username(registerRequest.getUsername())
+//                .password(passwordEncoder.encode(registerRequest.getPassword()))
+//                .profile(uploadedFileName)
+//                .build();
+//
+//        Employee savedEmployee = employeeRepository.save(employee);
+//        String profileUrl = baseUrl + "/file/profile/" + savedEmployee.getProfile();
+//        var accessToken = jwtService.generateToken(savedEmployee);
+//        var refreshToken = refreshTokenService.createRefreshToken(savedEmployee.getUsername());
+//
+//        return AuthResponse.builder()
+//                .accessToken(accessToken)
+//                .refreshToken(refreshToken.getRefreshToken())
+//                .userId(savedEmployee.getId())
+//                .WorkTitle(savedEmployee.getWorkTitle())
+//                .firstName(savedEmployee.getFirstName())
+//                .lastName(savedEmployee.getLastName())
+//                .username(savedEmployee.getUsername())
+//                .role(savedEmployee.getRole())
+//                .profileUrl(profileUrl)
+//                .build();
+//    }
+public Long convertPhoneNumber(String phoneNumber) {
+    try {
+        return Long.parseLong(phoneNumber);
+    } catch (NumberFormatException e) {
+        // Handle invalid phone number format
+        throw new IllegalArgumentException("Invalid phone number format");
+    }
+}
+    public AuthResponse register(RegisterRequest registerRequest) {
         var employee = Employee.builder()
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
                 .address(registerRequest.getAddress())
                 .email(registerRequest.getEmail())
-                .phoneNumber(registerRequest.getPhoneNumber())
+                .phoneNumber(convertPhoneNumber(registerRequest.getPhoneNumber()))
                 .workTitle(registerRequest.getWorkTitle())
                 .role(registerRequest.getRole())
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .profile(uploadedFileName)
                 .build();
 
         Employee savedEmployee = employeeRepository.save(employee);
-        String profileUrl = baseUrl + "/file/profile/" + savedEmployee.getProfile();
+
+        LeaveBalance defaultLeaveBalance = LeaveBalance.builder()
+                .employee(employee)
+                .approvedLeaves(0)
+                .rejectedLeaves(0)
+                .totalAvailableLeaves(30)
+                .build();
+
+        leaveBalanceRepo.save(defaultLeaveBalance);
+
+
+        String profileUrl = path + "achchu.jpeg";    // Set a default profile URL if needed
+
         var accessToken = jwtService.generateToken(savedEmployee);
         var refreshToken = refreshTokenService.createRefreshToken(savedEmployee.getUsername());
 
@@ -74,9 +127,9 @@ public class AuthService {
                 .lastName(savedEmployee.getLastName())
                 .username(savedEmployee.getUsername())
                 .role(savedEmployee.getRole())
-                .profileUrl(profileUrl)
                 .build();
     }
+
 
     public AuthResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(

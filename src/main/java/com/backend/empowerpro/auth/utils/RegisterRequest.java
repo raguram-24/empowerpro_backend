@@ -22,7 +22,7 @@ public class RegisterRequest {
     private String lastName;
     private String address;
     private String email;
-    private Long phoneNumber;
+    private String phoneNumber;
     private String workTitle;
     private EmployeeRole role;
     private String username;

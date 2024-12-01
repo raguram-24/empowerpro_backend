@@ -1,22 +1,23 @@
 package com.backend.empowerpro.service.impl;
 
+import com.backend.empowerpro.auth.entity.Employee;
+import com.backend.empowerpro.auth.repository.EmployeeRepository;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.entity.Complaint;
 import com.backend.empowerpro.exception.ComplaintNotFoundException;
+import com.backend.empowerpro.exception.ResourceNotFoundException;
 import com.backend.empowerpro.repository.ComplaintRepo;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.FileService;
 import com.backend.empowerpro.utils.ComplaintMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class ComplaintServiceImp implements ComplaintService {
     private static final Logger logger = LoggerFactory.getLogger(Complaint.class);
     private final ComplaintRepo complaintRepo;
+    private final EmployeeRepository employeeRepo;
     private final ComplaintMapper complaintMapper;
 
     private final FileService fileService;
@@ -59,22 +61,45 @@ public class ComplaintServiceImp implements ComplaintService {
     }
 
     @Override
-    public String createComplaint(ComplaintCreationDto complaintCreationDto) {
+    public ComplaintDto saveComplaint(ComplaintCreationDto complaintCreationDto) {
         try {
             // Convert DTO to Complaint entity
+            Employee sender = employeeRepo.findById(complaintCreationDto.getSenderId())
+                    .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + complaintCreationDto.getSenderId()));
             Complaint complaint = complaintMapper.toComplaint(complaintCreationDto);
+            complaint.setSender(sender);
 
             // Save the complaint to the database
             Complaint savedComplaint = complaintRepo.save(complaint);
 
-            logger.info("Complaint has been created successfully: {}", complaint);
-            return "Complaint created successfully with ID: " + complaint.getId();
+            logger.info("Complaint has been created successfully: {}", savedComplaint);
+
+            // Convert the saved Complaint entity to ComplaintDto to return
+            return complaintMapper.toComplaintDto(savedComplaint);
 
         }catch (Exception e) {
             logger.error("An unexpected error occurred while creating complaint: {}", e.getMessage(), e);
             throw new RuntimeException("An unexpected error occurred while creating complaint", e);
         }
     }
+
+//    @Override
+//    public String createComplaint(ComplaintCreationDto complaintCreationDto) {
+//        try {
+//            // Convert DTO to Complaint entity
+//            Complaint complaint = complaintMapper.toComplaint(complaintCreationDto);
+//
+//            // Save the complaint to the database
+//            Complaint savedComplaint = complaintRepo.save(complaint);
+//
+//            logger.info("Complaint has been created successfully: {}", complaint);
+//            return "Complaint created successfully with ID: " + complaint.getId();
+//
+//        }catch (Exception e) {
+//            logger.error("An unexpected error occurred while creating complaint: {}", e.getMessage(), e);
+//            throw new RuntimeException("An unexpected error occurred while creating complaint", e);
+//        }
+//    }
 
 
 
@@ -143,11 +168,30 @@ public class ComplaintServiceImp implements ComplaintService {
         }
     }
 
-
     @Override
     public List<ComplaintDto> getComplaintsAssignedToHR() {
+        return null;
+    }
+
+
+//    @Override
+//    public List<ComplaintDto> getComplaintsAssignedToHR() {
+//        try{
+//            List<Complaint> complaints = complaintRepo.findByAssignedTo("HR");
+//            logger.info("All Complaints has been Fetched Successfully");
+//            return complaints.stream()
+//                    .map(complaintMapper::toComplaintDto)
+//                    .collect(Collectors.toList());
+//        } catch (Exception e) {
+//            logger.error("An unexpected error occurred while fetching complaints: {}", e.getMessage(), e);
+//            throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
+//        }
+//    }
+
+    @Override
+    public List<ComplaintDto> getComplaintsAssignedToUser(Long userId) {
         try{
-            List<Complaint> complaints = complaintRepo.findByAssignedTo("HR");
+            List<Complaint> complaints = complaintRepo.findBySender_Id(userId);
             logger.info("All Complaints has been Fetched Successfully");
             return complaints.stream()
                     .map(complaintMapper::toComplaintDto)
@@ -157,4 +201,35 @@ public class ComplaintServiceImp implements ComplaintService {
             throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
         }
     }
+
+    @Override
+    @Transactional
+    public void replyToComplaint(Long complaintId, String reply) {
+        // Fetch the complaint by ID
+        Complaint complaint = complaintRepo.findById(complaintId)
+                .orElseThrow(() -> new ResourceNotFoundException("Complaint not found with id: " + complaintId));
+
+        // Update the complaint with the reply and status
+        complaint.setReply(reply);
+        complaint.setStatus("SOLVED");
+
+        // Save the updated complaint
+        complaintRepo.save(complaint);
+    }
+
+    @Override
+    public List<ComplaintDto> getComplaintsAssignedToRole(String role) {
+        try{
+            List<Complaint> complaints = complaintRepo.findByAssignedTo(role);
+            logger.info("All Complaints has been Fetched Successfully");
+            return complaints.stream()
+                    .map(complaintMapper::toComplaintDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred while fetching complaints: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
+        }
+    }
+
+
 }
