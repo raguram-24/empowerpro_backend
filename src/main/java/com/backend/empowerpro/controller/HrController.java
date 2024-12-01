@@ -18,6 +18,7 @@ import com.backend.empowerpro.service.LeaveService;
 import com.backend.empowerpro.service.VacancyService;
 import com.backend.empowerpro.utils.ReplyRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -207,11 +209,11 @@ public class HrController {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
         return ResponseEntity.ok(todayLeaves);
     }
-
+    @PreAuthorize("hasAuthority('HR')")
     @PostMapping(value = "/event-creation", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EventDto> createEvent(
-            @RequestPart("data") EventCreationDto req,  // JSON data as part of the form
+            @RequestPart("data") @Valid EventCreationDto req,  // JSON data as part of the form
             @RequestPart("file") MultipartFile file) throws IOException {  // File upload
 
         if (file != null && !file.isEmpty()) {
@@ -221,6 +223,15 @@ public class HrController {
         }
 
         return ResponseEntity.ok(eventService.createEvent(req));
+    }
+    @PreAuthorize("hasAuthority('HR')")
+    @GetMapping("/all-events")
+    public ResponseEntity<List<EventDto>> getAllEvents(){
+        return ResponseEntity.ok(eventService.getAllEvents());
+    }
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<EventDto> getEvent(@PathVariable Long eventId){
+        return ResponseEntity.ok(eventService.getOneEvent(eventId));
     }
 
 

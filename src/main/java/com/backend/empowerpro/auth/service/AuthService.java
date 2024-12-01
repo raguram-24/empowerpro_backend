@@ -6,6 +6,7 @@ import com.backend.empowerpro.auth.utils.AuthResponse;
 import com.backend.empowerpro.auth.utils.LoginRequest;
 import com.backend.empowerpro.auth.utils.RegisterRequest;
 import com.backend.empowerpro.entity.LeaveBalance;
+import com.backend.empowerpro.exception.CustomAuthenticationException;
 import com.backend.empowerpro.exception.FileExistsException;
 import com.backend.empowerpro.repository.LeaveBalanceRepo;
 import com.backend.empowerpro.service.EmployeeService;
@@ -14,8 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -125,28 +125,49 @@ public class AuthService {
 
 
     public AuthResponse login(LoginRequest loginRequest) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
+        try {
+            // Authenticate user
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()
+                    )
+            );
 
-        var employee = employeeRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Employee not found!"));
-        String profileUrl = baseUrl + "/file/profile/" + employee.getProfile();
-        var accessToken = jwtService.generateToken(employee);
-//        var refreshToken = refreshTokenService.createRefreshToken(loginRequest.getUsername());
+            // Fetch employee details
+            var employee = employeeRepository.findByUsername(loginRequest.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("Employee not found"));
 
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-//                .refreshToken(refreshToken.getRefreshToken())
-                .userId(employee.getId())
-                .WorkTitle(employee.getWorkTitle())
-                .firstName(employee.getFirstName())
-                .lastName(employee.getLastName())
-                .username(employee.getUsername())
-                .role(employee.getRole())
-                .profileUrl(profileUrl)
-                .build();
+            // Generate profile URL and access token
+            String profileUrl = baseUrl + "/file/profile/" + employee.getProfile();
+            var accessToken = jwtService.generateToken(employee);
+
+            // Build and return the response
+            return AuthResponse.builder()
+                    .accessToken(accessToken)
+                    .userId(employee.getId())
+                    .WorkTitle(employee.getWorkTitle())
+                    .firstName(employee.getFirstName())
+                    .lastName(employee.getLastName())
+                    .username(employee.getUsername())
+                    .role(employee.getRole())
+                    .profileUrl(profileUrl)
+                    .build();
+
+        } catch (BadCredentialsException ex) {
+            throw new CustomAuthenticationException("Invalid username or password", ex);
+        } catch (UsernameNotFoundException ex) {
+            throw new CustomAuthenticationException("Employee not found", ex);
+        } catch (DisabledException ex) {
+            throw new CustomAuthenticationException("User account is disabled", ex);
+        } catch (LockedException ex) {
+            throw new CustomAuthenticationException("User account is locked", ex);
+        } catch (Exception ex) {
+            throw new CustomAuthenticationException("An unexpected error occurred during authentication", ex);
+        }
+
+
+
+
     }
 }

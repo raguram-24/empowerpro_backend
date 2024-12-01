@@ -30,11 +30,9 @@ public class Employee implements UserDetails {
     private Long id;
 
     @Column(name = "first_name", length = 50, nullable = false)
-    @NotBlank(message = "firstname Cannot be Empty")
     private String firstName;
 
     @Column(name = "last_name", length = 50, nullable = false)
-    @NotBlank(message = "lastname Cannot be Empty")
     private String lastName;
 
     @Column(name = "address", length = 500, nullable = false)

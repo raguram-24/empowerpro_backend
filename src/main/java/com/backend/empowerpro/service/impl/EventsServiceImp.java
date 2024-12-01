@@ -6,7 +6,10 @@ import com.backend.empowerpro.dto.events.EventCreationDto;
 import com.backend.empowerpro.dto.events.EventDto;
 import com.backend.empowerpro.dto.events.EventUpdateDto;
 import com.backend.empowerpro.entity.Accounts;
+import com.backend.empowerpro.entity.Complaint;
 import com.backend.empowerpro.entity.Event;
+import com.backend.empowerpro.exception.AccountsNotFoundException;
+import com.backend.empowerpro.exception.EventNotFoundException;
 import com.backend.empowerpro.repository.EventRepo;
 import com.backend.empowerpro.service.EventService;
 import com.backend.empowerpro.utils.EventMapper;
@@ -19,7 +22,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,17 +63,40 @@ public class EventsServiceImp implements EventService {
     }
 
     @Override
-    public EventCreationDto updateEvent(EventUpdateDto eventUpdateDto) {
+    public EventDto updateEvent(EventUpdateDto eventUpdateDto, Long id) {
         return null;
     }
 
     @Override
-    public EventCreationDto getAllEvents() {
-        return null;
+    public List<EventDto> getAllEvents() {
+        try{
+            List<Event> allEvents = eventRepo.findAll();
+            logger.info("All Complaints has been Fetched Successfully");
+            return allEvents.stream()
+                    .map(eventMapper::toEventDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred while fetching Events: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching Events", e);
+        }
     }
 
     @Override
-    public EventCreationDto getOneEvent(Long id) {
-        return null;
+    public EventDto getOneEvent(Long id) {
+        try{
+            //Fetching Accounts by ID;
+            var event = eventRepo.findById(id);
+
+            if(event.isPresent()){
+                Event retrievedEvent = event.get();
+                logger.info("Event of {} has been fetched Successfully", id);
+                return eventMapper.toEventDto(retrievedEvent);
+            }else{
+                throw new EventNotFoundException("Not found");
+            }
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred while fetching Event: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching Event", e);
+        }
     }
 }

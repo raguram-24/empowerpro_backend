@@ -22,6 +22,5 @@ public class EventCreationDto {
     private String time;
     @NotNull(message = "Cost cannot be empty")
     private Float estimatedCost;
-    @NotBlank(message = "image should not be blank")
     private String image;
 }
