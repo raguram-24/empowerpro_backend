@@ -1,10 +1,7 @@
 package com.backend.empowerpro.dto.leave;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.apache.catalina.util.Introspection;
+import jdk.jshell.Snippet;
+import lombok.*;
 
 import java.util.Date;
 
@@ -12,10 +9,11 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class LeaveDto {
+@Builder
+public class LeaveHrDto {
     private Long id;
     private Long senderId;
+    private String employeeName;
     private String leaveType;
     private int leaveDays;
     private Date startDate;
