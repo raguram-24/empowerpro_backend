@@ -1,10 +1,10 @@
 package com.backend.empowerpro.utils;
 
+import com.backend.empowerpro.auth.entity.Employee;
 import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
 import com.backend.empowerpro.dto.employee.EmployeeDto;
-import com.backend.empowerpro.dto.employee.EmployeeUpdateRequest;
-import com.backend.empowerpro.entity.Employee;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
@@ -12,5 +12,5 @@ public interface EmployeeMapper {
 
     Employee toEmployee(EmployeeCreationDto employeeCreationDto);
 
-    Employee toEmployee(EmployeeUpdateRequest employeeUpdateRequest);
+    void updateEmployeeFromDto(EmployeeCreationDto employeeCreationDto, @MappingTarget Employee employee);
 }

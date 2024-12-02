@@ -1,5 +1,6 @@
 package com.backend.empowerpro.dto.employee;
 
+import com.backend.empowerpro.auth.entity.EmployeeRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,11 +13,13 @@ public class EmployeeCreationDto {
     private String lastName;
     private String address;
     private String email;
-    private String phoneNumber;
+    private Long phoneNumber;
+    private EmployeeRole role;
     private String workTitle;
-    private String role;
     private String username;
-    private String experiences;
-    private String skills;
+    private String password;
     private String summary;
+    private String skills;
+    private String experiences;
+    private String profile;
 }

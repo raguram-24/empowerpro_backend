@@ -1,5 +1,6 @@
 package com.backend.empowerpro.dto.employee;
 
+import com.backend.empowerpro.auth.entity.EmployeeRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,18 +9,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeDto {
-    private Long id;
+    private Long employeeId;
     private String firstName;
     private String lastName;
     private String address;
     private String email;
-    private String phoneNumber;
-    private String workTitle;
-    private String role;
     private String username;
-    private String experiences;
-    private String skills;
+    private String workTitle;
+    private EmployeeRole role;
     private String summary;
-    private String profile;
-    private String profileUrl; // Generated URL for profile image
+    private String skills;
+    private String experiences;
+    private String profilePath;
 }
