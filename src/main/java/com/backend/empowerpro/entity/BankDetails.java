@@ -28,4 +28,11 @@ public class BankDetails {
     private LocalDate createdAt;
     @UpdateTimestamp
     private LocalDate updatedAt;
+
+    public BankDetails(Employee employee, String bankName, String accNo, String branch) {
+        this.employee = employee;
+        this.bankName = bankName;
+        this.acc_no = accNo;
+        this.branch = branch;
+    }
 }

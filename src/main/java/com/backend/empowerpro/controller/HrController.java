@@ -236,7 +236,7 @@ public class HrController {
     public ResponseEntity<EventDto> getEvent(@PathVariable Long eventId){
         return ResponseEntity.ok(eventService.getOneEvent(eventId));
     }
-
+    @PreAuthorize("hasAuthority('HR')")
     @PostMapping(value = "/claim-creation", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MedicalClaim> createClaim(

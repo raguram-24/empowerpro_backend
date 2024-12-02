@@ -43,4 +43,6 @@ public class Leave {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private LeaveStatus status;
+
+//    private LocalDate dateRange;
 }

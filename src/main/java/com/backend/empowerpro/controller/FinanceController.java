@@ -3,6 +3,7 @@ package com.backend.empowerpro.controller;
 
 import com.backend.empowerpro.dto.accounts.AccountsCreationDto;
 import com.backend.empowerpro.dto.accounts.AccountsDto;
+import com.backend.empowerpro.dto.bank.BankCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
@@ -12,10 +13,8 @@ import com.backend.empowerpro.dto.suppliers.SuppliersCreationDto;
 import com.backend.empowerpro.dto.suppliers.SuppliersDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
-import com.backend.empowerpro.service.AccountsService;
-import com.backend.empowerpro.service.ComplaintService;
-import com.backend.empowerpro.service.LeaveService;
-import com.backend.empowerpro.service.SupplierService;
+import com.backend.empowerpro.entity.BankDetails;
+import com.backend.empowerpro.service.*;
 import com.backend.empowerpro.utils.ReplyRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -43,6 +42,7 @@ public class FinanceController {
 
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
+    private final BankService bankService;
 
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
     private final SupplierService supplierService;
@@ -225,6 +225,12 @@ public class FinanceController {
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
         return ResponseEntity.ok(todayLeaves);
+    }
+    @PreAuthorize("hasAuthority('Finance')")
+    @PostMapping("/bank-creation")
+    public ResponseEntity<BankDetails> createBankDetails(@RequestBody BankCreationDto bankCreationDto){
+        return ResponseEntity.ok(bankService.createDetail(bankCreationDto));
+
     }
 
 
