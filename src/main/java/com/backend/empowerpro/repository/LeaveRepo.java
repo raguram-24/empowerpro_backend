@@ -21,4 +21,6 @@ public interface LeaveRepo extends JpaRepository<Leave, Long> {
 
     @Query("SELECT l FROM Leave l WHERE l.employee.id != :loggedInEmployeeId")
     List<Leave> findLeavesAssignedToRole(@Param("loggedInEmployeeId") Long loggedInEmployeeId);
+
+//    List<Leave> findByStatusAndDateRange(String status, LocalDate startDate);
 }

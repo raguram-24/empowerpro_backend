@@ -9,7 +9,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class BankCreationDto {
-    private Long id;
     private String username;
     private String bankName;
     private String acc_no;
