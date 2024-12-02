@@ -94,8 +94,34 @@ public class LeaveServiceImp implements LeaveService {
                         .role((String) result[4])
                         .build())
                 .collect(Collectors.toList());
+    }
 
+    @Override
+    public List<LeaveDto> getLeavesByFilter(String timePeriod, String status){
+        LocalDate startDate = calculateStartDate(timePeriod);
 
+        try{
+            List<Leave> filteredLeaves = leaveRepo.findByStatusAndDateRange(status, startDate);
+            logger.info("All Filtered leaves has been Fetched Successfully");
+            return filteredLeaves.stream()
+                    .map(leavesMapper::toLeaveDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred while fetching filtered leaves: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching filtered leaves", e);
+        }
+    }
+
+    private LocalDate calculateStartDate(String timePeriod){
+        if ("Last 3 Months".equals(timePeriod)){
+            return LocalDate.now().minusMonths(3);
+        } else if ("Last 6 Months".equals(timePeriod)) {
+            return LocalDate.now().minusMonths(6);
+        } else if ("Last 12 Months".equals(timePeriod)) {
+            return LocalDate.now().minusMonths(12);
+        }
+
+        return LocalDate.now().minusDays(30);
     }
 
 

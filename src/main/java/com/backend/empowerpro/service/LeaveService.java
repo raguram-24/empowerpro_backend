@@ -13,4 +13,6 @@ public interface LeaveService {
     public List<LeaveDto> getLeavesByUser(Long userId);
     public Integer getAvailableLeaves(Long userId);
     public List<TodayLeaveDto> getTodayLeaves();
+    public List<LeaveDto> getLeavesByFilter(String timePeriod,String status);
+
 }
