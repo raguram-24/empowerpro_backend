@@ -3,6 +3,7 @@ package com.backend.empowerpro.service.impl;
 import com.backend.empowerpro.auth.repository.EmployeeRepository;
 import com.backend.empowerpro.dto.bank.BankCreationDto;
 import com.backend.empowerpro.entity.BankDetails;
+import com.backend.empowerpro.exception.MedicalClaimNotFound;
 import com.backend.empowerpro.repository.BankRepo;
 import com.backend.empowerpro.service.BankService;
 import com.backend.empowerpro.utils.LoggedInEmployee;
@@ -55,12 +56,34 @@ public class BankServiceImp implements BankService {
     }
 
     @Override
-    public List<BankDetails> getAllDetails() {
-        return List.of();
+    public List<BankDetails> getAllDetails()
+    {
+        try {
+            List<BankDetails> allbankdetail = bankRepo.findAll();
+            logger.info("All Bankdetails Found");
+            return allbankdetail;
+        }catch (Exception e){
+            logger.error("An unexpected error occurred while fetching all medical claim: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching medical claim", e);
+
+        }
     }
 
     @Override
     public BankDetails getOneDetail(Long id) {
-        return null;
+        try {
+            var bankdetails = bankRepo.findById(id);
+            if (bankdetails.isPresent()){
+                BankDetails retrivedbankdetail = bankdetails.get();
+                logger.info("Retrieved bankdetails:{}",id);
+                return retrivedbankdetail;
+            }else {
+                throw new MedicalClaimNotFound("Not found");
+            }
+        }catch (Exception e){
+            logger.error("An unexpected error occurred while fetching onebankservice: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching onebankservice", e);
+
+        }
     }
 }

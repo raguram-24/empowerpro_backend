@@ -6,6 +6,7 @@ import com.backend.empowerpro.dto.accounts.AccountsDto;
 import com.backend.empowerpro.dto.bank.BankCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
+import com.backend.empowerpro.dto.events.EventDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
@@ -71,6 +72,17 @@ public class FinanceController {
     public ResponseEntity<String> deleteSupplier(@PathVariable Long id) {
         return ResponseEntity.ok(supplierService.deleteSuppliers(id));
     }
+
+//    @PreAuthorize("hasAuthority('Finance')")
+    @GetMapping("/all-bankdetails")
+    public ResponseEntity<List<BankDetails>> getAllDetails() {return ResponseEntity.ok(bankService.getAllDetails());}
+
+    @PreAuthorize("hasAuthority('Finance')")
+    @GetMapping("/bankdetails/{id}")
+    public ResponseEntity<BankDetails> getOneDetail(@PathVariable Long eventId){
+        return ResponseEntity.ok(bankService.getOneDetail(eventId));
+    }
+
 //    public final ComplaintService complaintService;
     private final AccountsService accountsService;
     @PreAuthorize("hasAuthority('Finance')")
