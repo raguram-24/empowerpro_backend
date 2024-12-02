@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import com.backend.empowerpro.exception.MedicalClaimNotFound;
 
 import java.util.List;
 @Service
@@ -50,12 +51,35 @@ public class MedicalClaimServiceImp implements MedicalClaimService {
     }
 
     @Override
-    public List<MedicalClaimDto> getAllClaim() {
-        return List.of();
+    public List<MedicalClaim> getAllClaim() {
+
+        try {
+            List<MedicalClaim> allmedicalClaims = medicalClaimRepo.findAll();
+            logger.info("All MedicalClaims found");
+            return allmedicalClaims;
+        }catch (Exception e){
+            logger.error("An unexpected error occurred while fetching all medical claim: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching medical claim", e);
+
+        }
+
     }
 
     @Override
-    public MedicalClaimDto getOneClaim(Long id) {
-        return null;
+    public MedicalClaim getOneClaim(Long id) {
+        try {
+            var medicalClaim = medicalClaimRepo.findById(id);
+            if (medicalClaim.isPresent()){
+                MedicalClaim retrievedMedicalClaim = medicalClaim.get();
+                logger.info("Retrieved MedicalClaim : {}", id);
+                return retrievedMedicalClaim;
+            }else {
+                throw new MedicalClaimNotFound("Not found");
+            }
+        }catch (Exception e){
+            logger.error("An unexpected error occurred while fetching oneMedicalClaim: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching Medicalclaim", e);
+        }
+
     }
 }
