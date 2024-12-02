@@ -8,14 +8,14 @@ import com.backend.empowerpro.dto.events.EventDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
+import com.backend.empowerpro.dto.medicalClaim.MedicalClaimCreation;
+import com.backend.empowerpro.dto.medicalClaim.MedicalClaimDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.Complaint;
+import com.backend.empowerpro.entity.MedicalClaim;
 import com.backend.empowerpro.repository.ComplaintRepo;
-import com.backend.empowerpro.service.ComplaintService;
-import com.backend.empowerpro.service.EventService;
-import com.backend.empowerpro.service.LeaveService;
-import com.backend.empowerpro.service.VacancyService;
+import com.backend.empowerpro.service.*;
 import com.backend.empowerpro.utils.ReplyRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -49,9 +49,12 @@ public class HrController {
     private final ComplaintService complaintService;
     private final LeaveService leaveService;
     private final ComplaintRepo complaintRepo;
+    private final MedicalClaimService medicalClaimService;
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
     @Value("${project.events}")
     private String EVENTS_DIR;
+    @Value("${project.claims}")
+    private String CLAIMS_DIR;
     String rootPath = System.getProperty("user.dir");
 
 
@@ -232,6 +235,19 @@ public class HrController {
     @GetMapping("/event/{eventId}")
     public ResponseEntity<EventDto> getEvent(@PathVariable Long eventId){
         return ResponseEntity.ok(eventService.getOneEvent(eventId));
+    }
+
+    @PostMapping(value = "/claim-creation", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MedicalClaim> createClaim(
+            @RequestPart("data") @Valid MedicalClaimCreation medicalClaimCreation,
+            @RequestPart("file") MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            String filePath = rootPath + File.separator + CLAIMS_DIR + file.getOriginalFilename();
+            file.transferTo(new File(filePath));
+            medicalClaimCreation.setFileUrl(filePath);
+        }
+        return ResponseEntity.ok(medicalClaimService.createClaim(medicalClaimCreation));
     }
 
 
