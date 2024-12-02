@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDto {
-    private Long id;
+public class EmployeeUpdateRequest {
     private String firstName;
     private String lastName;
     private String address;
@@ -21,5 +20,4 @@ public class EmployeeDto {
     private String skills;
     private String summary;
     private String profile;
-    private String profileUrl; // Generated URL for profile image
 }

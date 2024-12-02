@@ -1,6 +1,5 @@
 package com.backend.empowerpro.service.impl;
 
-
 import com.backend.empowerpro.auth.entity.Employee;
 import com.backend.empowerpro.auth.repository.EmployeeRepository;
 import com.backend.empowerpro.auth.utils.EmployeeResponse;
@@ -20,32 +19,28 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImp implements EmployeeService {
+
     private final EmployeeRepository employeeRepository;
     private final FileService fileService;
+
     @Value("${project.employeeProfile}")
     private String path;
+
     @Value("${base.url}")
     private String baseUrl;
+
     private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
-    @Override
-    public List<EmployeeResponse> getAllEmployees() {
-        return List.of();
-    }
 
     @Override
-    public EmployeeResponse getOneEmployee(Long id) {
-        try{
-            Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found"));
-            logger.info("Employee has been Fetched Successfully");
-            //Generate PosterUrl
+    public List<EmployeeResponse> getAllEmployees() {
+        return employeeRepository.findAll().stream().map(employee -> {
             String posterUrl = baseUrl + "/file/profile/" + employee.getProfile();
-            logger.info("posterurl Created Successfully");
-            //Map to MovieDtoObject
-            EmployeeResponse response = new EmployeeResponse(
+            return new EmployeeResponse(
                     employee.getId(),
                     employee.getFirstName(),
                     employee.getLastName(),
@@ -60,43 +55,96 @@ public class EmployeeServiceImp implements EmployeeService {
                     employee.getProfile(),
                     posterUrl
             );
-            logger.info("Response has been Created Successfully");
-            return response;
-        }catch (Exception e) {
-            logger.error("An unexpected error occurred while fetching Employee: {}", e.getMessage(), e);
-            throw new RuntimeException("An unexpected error occurred while fetching vacancies", e);
-        }
-
+        }).collect(Collectors.toList());
     }
 
-//    @Override
-//    public EmployeeResponse updateEmployee(Long id, EmployeeUpdateRequest employeeUpdateRequest, MultipartFile file) throws IOException {
-//        Employee found_employee = employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not found"));
-//        String fileName = found_employee.getProfile();
-//        if(file != null){
-//            Files.deleteIfExists(Paths.get(path + File.separator + fileName));
-//            fileName =fileService.uploadFile(path,file);
-//        }
-//        employeeUpdateRequest.setProfile(fileName);
-//        String profileUrl = baseUrl + "/file/" + found_employee.getProfile();
-//        Employee updatedEmployee = new Employee(
-//                found_employee.getId(),
-//                employeeUpdateRequest.getFirstName(),
-//                employeeUpdateRequest.getLastName(),
-//                employeeUpdateRequest.getAddress(),
-//                employeeUpdateRequest.getEmail(),
-//                employeeUpdateRequest.getPhoneNumber(),
-//                employeeUpdateRequest.getWorkTitle(),
-//                employeeUpdateRequest.getRole(),
-//                employeeUpdateRequest.getUserName(),
-//                employeeUpdateRequest.getExperiences(),
-//                employeeUpdateRequest.getSummary(),
-//                employeeUpdateRequest.getProfile()
-//        )
-//    }
+    @Override
+    public EmployeeResponse getOneEmployee(Long id) {
+        try {
+            Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found"));
+            String posterUrl = baseUrl + "/file/profile/" + employee.getProfile();
+            return new EmployeeResponse(
+                    employee.getId(),
+                    employee.getFirstName(),
+                    employee.getLastName(),
+                    employee.getAddress(),
+                    employee.getEmail(),
+                    employee.getUsername(),
+                    employee.getWorkTitle(),
+                    employee.getRole(),
+                    employee.getSummary(),
+                    employee.getSkills(),
+                    employee.getExperiences(),
+                    employee.getProfile(),
+                    posterUrl
+            );
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred while fetching Employee: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching employee", e);
+        }
+    }
+
+    @Override
+    public EmployeeResponse updateEmployee(Long id, EmployeeUpdateRequest employeeUpdateRequest, MultipartFile file) throws IOException {
+        Employee foundEmployee = employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found"));
+
+        String fileName = foundEmployee.getProfile();
+        if (file != null && !file.isEmpty()) {
+            // Delete old file if exists
+            Files.deleteIfExists(Paths.get(path + File.separator + fileName));
+            fileName = fileService.uploadFile(path, file);
+        }
+        foundEmployee.setProfile(fileName);
+        foundEmployee.setFirstName(employeeUpdateRequest.getFirstName());
+        foundEmployee.setLastName(employeeUpdateRequest.getLastName());
+        foundEmployee.setAddress(employeeUpdateRequest.getAddress());
+        foundEmployee.setEmail(employeeUpdateRequest.getEmail());
+        foundEmployee.setPhoneNumber(employeeUpdateRequest.getPhoneNumber());
+        foundEmployee.setWorkTitle(employeeUpdateRequest.getWorkTitle());
+        foundEmployee.setRole(employeeUpdateRequest.getRole());
+        foundEmployee.setUsername(employeeUpdateRequest.getUsername());
+        foundEmployee.setExperiences(employeeUpdateRequest.getExperiences());
+        foundEmployee.setSummary(employeeUpdateRequest.getSummary());
+        foundEmployee.setSkills(employeeUpdateRequest.getSkills());
+
+        Employee updatedEmployee = employeeRepository.save(foundEmployee);
+
+        String profileUrl = baseUrl + "/file/profile/" + updatedEmployee.getProfile();
+        return new EmployeeResponse(
+                updatedEmployee.getId(),
+                updatedEmployee.getFirstName(),
+                updatedEmployee.getLastName(),
+                updatedEmployee.getAddress(),
+                updatedEmployee.getEmail(),
+                updatedEmployee.getUsername(),
+                updatedEmployee.getWorkTitle(),
+                updatedEmployee.getRole(),
+                updatedEmployee.getSummary(),
+                updatedEmployee.getSkills(),
+                updatedEmployee.getExperiences(),
+                updatedEmployee.getProfile(),
+                profileUrl
+        );
+    }
 
     @Override
     public EmployeeResponse deleteEmployee(Long id) {
-        return null;
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found"));
+        employeeRepository.delete(employee);
+        return new EmployeeResponse(
+                employee.getId(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getAddress(),
+                employee.getEmail(),
+                employee.getUsername(),
+                employee.getWorkTitle(),
+                employee.getRole(),
+                employee.getSummary(),
+                employee.getSkills(),
+                employee.getExperiences(),
+                employee.getProfile(),
+                null
+        );
     }
 }

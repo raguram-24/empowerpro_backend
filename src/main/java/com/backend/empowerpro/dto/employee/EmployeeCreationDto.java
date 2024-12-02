@@ -8,16 +8,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeCreationDto {
-    private String username;
-    private String password;
     private String firstName;
     private String lastName;
+    private String address;
     private String email;
     private String phoneNumber;
-    private String address;
     private String workTitle;
     private String role;
-    private String skills;
+    private String username;
     private String experiences;
+    private String skills;
     private String summary;
 }
