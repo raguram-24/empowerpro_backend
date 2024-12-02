@@ -173,6 +173,11 @@ public class ComplaintServiceImp implements ComplaintService {
         }
     }
 
+    @Override
+    public List<ComplaintDto> getComplaintsAssignedToHR() {
+        return List.of();
+    }
+
 
 //    @Override
 //    public List<ComplaintDto> getComplaintsAssignedToHR() {
@@ -217,7 +222,7 @@ public class ComplaintServiceImp implements ComplaintService {
         complaintRepo.save(complaint);
     }
 
-    @Override
+
     public List<ComplaintDto> getComplaintsAssignedToRole(String role) {
         try{
             List<Complaint> complaints = complaintRepo.findByAssignedTo(role);

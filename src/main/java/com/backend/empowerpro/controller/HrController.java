@@ -232,10 +232,20 @@ public class HrController {
     public ResponseEntity<List<EventDto>> getAllEvents(){
         return ResponseEntity.ok(eventService.getAllEvents());
     }
+    @PreAuthorize("hasAuthority('HR')")
     @GetMapping("/event/{eventId}")
     public ResponseEntity<EventDto> getEvent(@PathVariable Long eventId){
         return ResponseEntity.ok(eventService.getOneEvent(eventId));
     }
+//    @PreAuthorize("hasAuthority('HR')")
+    @GetMapping("/allmedicalClaims")
+    public ResponseEntity<List<MedicalClaim>> getAllClaim(){return ResponseEntity.ok(medicalClaimService.getAllClaim());}
+    @PreAuthorize("hasAuthority('HR')")
+    @GetMapping("/medicalclaim/{medicalclaimId}")
+    public ResponseEntity<MedicalClaim> getMedicalClaim(@PathVariable Long medicalclaimId){
+        return ResponseEntity.ok(medicalClaimService.getOneClaim(medicalclaimId));
+    }
+
 
     @PostMapping(value = "/claim-creation", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
