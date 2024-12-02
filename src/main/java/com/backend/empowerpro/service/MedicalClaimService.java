@@ -11,6 +11,6 @@ import java.util.List;
 public interface MedicalClaimService {
     public MedicalClaim createClaim(MedicalClaimCreation medicalClaimCreation);
     public MedicalClaimDto updateClaim(MedicalClaimUpdateDTO medicalClaimUpdateDTO, Long id);
-    public List<MedicalClaimDto> getAllClaim();
-    public MedicalClaimDto getOneClaim(Long id);
+    public List<MedicalClaim> getAllClaim();
+    public MedicalClaim getOneClaim(Long id);
 }
