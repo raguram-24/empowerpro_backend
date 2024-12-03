@@ -2,9 +2,12 @@ package com.backend.empowerpro.controller;
 
 import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
 import com.backend.empowerpro.dto.employee.EmployeeDto;
+import com.backend.empowerpro.entity.PayRoll;
 import com.backend.empowerpro.service.EmployeeService;
+import com.backend.empowerpro.service.PayrollService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
@@ -35,6 +38,7 @@ public class EmployeeController {
     private final EmployeeService employeeService;
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
+    private final PayrollService payrollService;
 
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
 
@@ -141,5 +145,10 @@ public class EmployeeController {
     @GetMapping("/leave-today")
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         return ResponseEntity.ok(leaveService.getTodayLeaves());
+    }
+    @PreAuthorize("hasAuthority('Employee')")
+    @GetMapping("/get-slip/{id}")
+    public ResponseEntity<PayRoll> getOnePayRoll(@PathVariable Long id){
+        return ResponseEntity.ok(payrollService.getOnePayRoll(id));
     }
 }

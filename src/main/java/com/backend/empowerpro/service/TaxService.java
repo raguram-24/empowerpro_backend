@@ -14,4 +14,5 @@ public interface TaxService {
     public Tax updateTax(TaxCreationDto taxCreationDto, Long id);
     public List<Tax> getAllTax();
     public Tax getOneTax(Long id);
+    public Tax getLatestTax();
 }

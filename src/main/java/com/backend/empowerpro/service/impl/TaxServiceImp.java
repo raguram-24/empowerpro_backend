@@ -4,7 +4,10 @@ import com.backend.empowerpro.dto.events.EventDto;
 import com.backend.empowerpro.dto.tax.TaxCreationDto;
 import com.backend.empowerpro.dto.tax.TaxDto;
 import com.backend.empowerpro.entity.Event;
+import com.backend.empowerpro.entity.MedicalClaim;
 import com.backend.empowerpro.entity.Tax;
+import com.backend.empowerpro.exception.CustomAuthenticationException;
+import com.backend.empowerpro.exception.MedicalClaimNotFound;
 import com.backend.empowerpro.repository.TaxRepo;
 import com.backend.empowerpro.service.TaxService;
 import com.backend.empowerpro.utils.LoggedInEmployee;
@@ -48,11 +51,42 @@ public class TaxServiceImp implements TaxService {
 
     @Override
     public List<Tax> getAllTax() {
+        try {
+            List<Tax> allTax = taxRepo.findAll();
+            logger.info("All MedicalClaims found");
+            return allTax;
+        }catch (Exception e){
+            logger.error("An unexpected error occurred while fetching all tax: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching tax", e);
 
+        }
     }
 
     @Override
     public Tax getOneTax(Long id) {
-        return null;
+        try {
+            var tax = taxRepo.findById(id);
+            if (tax.isPresent()){
+                Tax tax1 = tax.get();
+                logger.info("Retrieved tax : {}", id);
+                return tax1;
+            }else {
+                throw new MedicalClaimNotFound("Not found");
+            }
+        }catch (Exception e){
+            logger.error("An unexpected error occurred while fetching tax: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching tax", e);
+        }
+    }
+
+    @Override
+    public Tax getLatestTax() {
+        try{
+            Tax latestTax = taxRepo.findLatestById();
+            return latestTax;
+        }catch (Exception e){
+            logger.error("An unexpected error occurred while fetching tax: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching tax", e);
+        }
     }
 }

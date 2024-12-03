@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name = "tax")
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Tax {
 
     @Id

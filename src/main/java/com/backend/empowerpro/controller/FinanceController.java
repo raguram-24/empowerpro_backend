@@ -10,12 +10,16 @@ import com.backend.empowerpro.dto.events.EventDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
+import com.backend.empowerpro.dto.payroll.PayRollDto;
+import com.backend.empowerpro.dto.payroll.PayRollReq;
+import com.backend.empowerpro.dto.payroll.PayRollViewDto;
 import com.backend.empowerpro.dto.suppliers.SuppliersCreationDto;
 import com.backend.empowerpro.dto.suppliers.SuppliersDto;
 import com.backend.empowerpro.dto.tax.TaxCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.BankDetails;
+import com.backend.empowerpro.entity.PayRoll;
 import com.backend.empowerpro.entity.Tax;
 import com.backend.empowerpro.service.*;
 import com.backend.empowerpro.utils.ReplyRequest;
@@ -47,7 +51,7 @@ public class FinanceController {
     private final ComplaintService complaintService;
     private final BankService bankService;
     private final TaxService taxService;
-
+    private final PayrollService payrollService;
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
     private final SupplierService supplierService;
     @PreAuthorize("hasAuthority('Finance')")
@@ -241,7 +245,7 @@ public class FinanceController {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
         return ResponseEntity.ok(todayLeaves);
     }
-    @PreAuthorize("hasAuthority('Finance')")
+//    @PreAuthorize("hasAuthority('Finance')")
     @PostMapping("/bank-creation")
     public ResponseEntity<BankDetails> createBankDetails(@RequestBody BankCreationDto bankCreationDto){
         return ResponseEntity.ok(bankService.createDetail(bankCreationDto));
@@ -253,6 +257,28 @@ public class FinanceController {
     public ResponseEntity<Tax> createTax(@RequestBody TaxCreationDto taxCreationDto){
         return ResponseEntity.ok(taxService.createTax(taxCreationDto));
     }
+    @PreAuthorize("hasAuthority('Finance')")
+    @GetMapping("/all-tax")
+    public ResponseEntity<List<Tax>> getAllTax() {return ResponseEntity.ok(taxService.getAllTax());}
+
+    @PreAuthorize("hasAuthority('Finance')")
+    @GetMapping("/tax/{id}")
+    public ResponseEntity<Tax> getOneTax(@PathVariable Long id){
+        return ResponseEntity.ok(taxService.getOneTax(id));
+    }
+
+    @PreAuthorize("hasAuthority('Finance')")
+    @PostMapping("/slip")
+    public ResponseEntity<PayRoll> createSlip(@RequestBody PayRollReq payRollReq){
+        return ResponseEntity.ok(payrollService.getPayroll(payRollReq));
+    }
+    @PreAuthorize("hasAuthority('Finance')")
+    @GetMapping("/slip-all")
+    public ResponseEntity<List<PayRollViewDto>> getallslip(){
+        return ResponseEntity.ok(payrollService.getAllPayRoll());
+    }
+
+
 
 
 
