@@ -1,19 +1,16 @@
-package com.backend.empowerpro.dto.attendance;
+package com.backend.empowerpro.dto.Blog;
 
+import com.backend.empowerpro.entity.Blog;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Time;
-import java.util.Date;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class CreateAttendanceDto {
+public class AddFavouriteDto {
     private Long userId;
-    private Date date;
-    private Time checkIn;
+    private Blog blog;
 }

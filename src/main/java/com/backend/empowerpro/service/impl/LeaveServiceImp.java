@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
+//import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,47 +31,47 @@ public class LeaveServiceImp implements LeaveService {
     private final EmployeeRepository employeeRepository;
     private final LeaveRepo leaveRepo;
     private final LeaveBalanceRepo leaveBalanceRepo;
-    private final LeavesMapper leavesMapper;
+//    private final LeavesMapper leavesMapper;
 
     @Override
     public void saveLeave(LeaveCreationDto leaveCreationDto) {
-        Employee employee = employeeRepository.findById(leaveCreationDto.getSenderId())
-                .orElseThrow(() -> new EntityNotFoundException("Employee with ID " + leaveCreationDto.getSenderId() + " not found"));
-
-        // Calculate leave days
-        long leaveDays = ChronoUnit.DAYS.between(
-                leaveCreationDto.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                leaveCreationDto.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-        ) + 1;
-
-        // Map the LeaveCreationDto to the Leave entity
-        Leave leave = Leave.builder()
-                .employee(employee) // Set employee fetched from DB
-                .leaveType(LeaveType.valueOf(leaveCreationDto.getLeaveType().toUpperCase()))
-                .startDate(leaveCreationDto.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                .endDate(leaveCreationDto.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                .leaveDays((int) leaveDays)
-                .reason(leaveCreationDto.getReason())
-                .status(LeaveStatus.PENDING) // Default status
-                .build();
-
-        // Save the leave to the repository
-        leaveRepo.save(leave);
+//        Employee employee = employeeRepository.findById(leaveCreationDto.getSenderId())
+//                .orElseThrow(() -> new EntityNotFoundException("Employee with ID " + leaveCreationDto.getSenderId() + " not found"));
+//
+//        // Calculate leave days
+//        long leaveDays = ChronoUnit.DAYS.between(
+//                leaveCreationDto.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+//                leaveCreationDto.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+//        ) + 1;
+//
+//        // Map the LeaveCreationDto to the Leave entity
+//        Leave leave = Leave.builder()
+//                .employee(employee) // Set employee fetched from DB
+//                .leaveType(LeaveType.valueOf(leaveCreationDto.getLeaveType().toUpperCase()))
+//                .startDate(leaveCreationDto.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+//                .endDate(leaveCreationDto.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+//                .leaveDays((int) leaveDays)
+//                .reason(leaveCreationDto.getReason())
+//                .status(LeaveStatus.PENDING) // Default status
+//                .build();
+//
+//        // Save the leave to the repository
+//        leaveRepo.save(leave);
     }
 
     @Override
     public List<LeaveDto> getLeavesByUser(Long userId) {
-        try{
-            List<Leave> leaves = leaveRepo.findByEmployee_Id(userId);
-            logger.info("All leaves has been fetched successfully");
-            return leaves.stream()
-                    .map(leavesMapper::toLeaveDto)
-                    .collect(Collectors.toList());
-        }catch (Exception e){
-            logger.error("An error occured while fetching leaves");
-            throw new RuntimeException("An unexcepted error occured", e);
-        }
-
+//        try{
+//            List<Leave> leaves = leaveRepo.findByEmployee_Id(userId);
+//            logger.info("All leaves has been fetched successfully");
+//            return leaves.stream()
+//                    .map(leavesMapper::toLeaveDto)
+//                    .collect(Collectors.toList());
+//        }catch (Exception e){
+//            logger.error("An error occured while fetching leaves");
+//            throw new RuntimeException("An unexcepted error occured", e);
+//        }
+       return  null;
     }
 
     @Override

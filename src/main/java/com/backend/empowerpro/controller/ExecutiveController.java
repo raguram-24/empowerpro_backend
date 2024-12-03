@@ -1,19 +1,18 @@
 package com.backend.empowerpro.controller;
+import com.backend.empowerpro.dto.Project.ProjectCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
-import com.backend.empowerpro.service.ComplaintService;
-import com.backend.empowerpro.service.LeaveService;
+import com.backend.empowerpro.entity.Project;
+import com.backend.empowerpro.service.*;
 import com.backend.empowerpro.utils.ReplyRequest;
 
 import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationCreationDto;
 import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationDto;
 import com.backend.empowerpro.dto.remark.RemarkCreationDto;
 import com.backend.empowerpro.dto.remark.RemarkDto;
-import com.backend.empowerpro.service.PerformanceEvaluationService;
-import com.backend.empowerpro.service.RemarkService;
 import com.backend.empowerpro.utils.PerformanceEvaluationMapper;
 import com.backend.empowerpro.utils.RemarkMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +39,12 @@ public class ExecutiveController {
 
     private final PerformanceEvaluationService performanceEvaluationService;
     private final RemarkService remarkService;
-    private final PerformanceEvaluationMapper performanceEvaluationMapper;
-    private final RemarkMapper remarkMapper;
+//    private final PerformanceEvaluationMapper performanceEvaluationMapper;
+//    private final RemarkMapper remarkMapper;
 
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
+    private final ProjectService projectService;
 
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
 
@@ -116,51 +116,51 @@ public class ExecutiveController {
     /**
      * Get all performance evaluations.
      */
-    @GetMapping("/performance-evaluations")
-    public ResponseEntity<List<PerformanceEvaluationDto>> getAllPerformanceEvaluations() {
-        List<PerformanceEvaluationDto> evaluations = performanceEvaluationService.getAllEvaluations()
-                .stream()
-                .map(performanceEvaluationMapper::toPerformanceEvaluationDto)
-                .toList();
-        return ResponseEntity.ok(evaluations);
-    }
+//    @GetMapping("/performance-evaluations")
+//    public ResponseEntity<List<PerformanceEvaluationDto>> getAllPerformanceEvaluations() {
+//        List<PerformanceEvaluationDto> evaluations = performanceEvaluationService.getAllEvaluations()
+//                .stream()
+//                .map(performanceEvaluationMapper::toPerformanceEvaluationDto)
+//                .toList();
+//        return ResponseEntity.ok(evaluations);
+//    }
 
     /**
      * Add or update a performance evaluation for an actor.
      */
-    @PostMapping("/add-performance-evaluation")
-    public ResponseEntity<PerformanceEvaluationDto> addOrUpdatePerformanceEvaluation(
-            @RequestBody PerformanceEvaluationCreationDto evaluationDto) {
-        PerformanceEvaluationDto updatedEvaluation = performanceEvaluationMapper.toPerformanceEvaluationDto(
-                performanceEvaluationService.addOrUpdateEvaluation(
-                        evaluationDto.getActorId(), evaluationDto.getEvaluationContent()));
-        return ResponseEntity.ok(updatedEvaluation);
-    }
+//    @PostMapping("/add-performance-evaluation")
+//    public ResponseEntity<PerformanceEvaluationDto> addOrUpdatePerformanceEvaluation(
+//            @RequestBody PerformanceEvaluationCreationDto evaluationDto) {
+//        PerformanceEvaluationDto updatedEvaluation = performanceEvaluationMapper.toPerformanceEvaluationDto(
+//                performanceEvaluationService.addOrUpdateEvaluation(
+//                        evaluationDto.getActorId(), evaluationDto.getEvaluationContent()));
+//        return ResponseEntity.ok(updatedEvaluation);
+//    }
 
     /**
      * Add a remark for another actor.
      */
-    @PostMapping("/add-remark")
-    public ResponseEntity<RemarkDto> addRemark(@RequestBody RemarkCreationDto remarkCreationDto) {
-        RemarkDto createdRemark = remarkMapper.toRemarkDto(
-                remarkService.addRemark(
-                        remarkCreationDto.getReviewerActorId(),
-                        remarkCreationDto.getReviewedActorId(),
-                        remarkCreationDto.getContent()));
-        return ResponseEntity.ok(createdRemark);
-    }
+//    @PostMapping("/add-remark")
+//    public ResponseEntity<RemarkDto> addRemark(@RequestBody RemarkCreationDto remarkCreationDto) {
+//        RemarkDto createdRemark = remarkMapper.toRemarkDto(
+//                remarkService.addRemark(
+//                        remarkCreationDto.getReviewerActorId(),
+//                        remarkCreationDto.getReviewedActorId(),
+//                        remarkCreationDto.getContent()));
+//        return ResponseEntity.ok(createdRemark);
+//    }
 
     /**
      * Get all remarks for a specific reviewed actor.
      */
-    @GetMapping("/{reviewedActorId}/remarks")
-    public ResponseEntity<List<RemarkDto>> getRemarksByReviewedActor(@PathVariable Long reviewedActorId) {
-        List<RemarkDto> remarks = remarkService.getRemarksByReviewedActor(reviewedActorId)
-                .stream()
-                .map(remarkMapper::toRemarkDto)
-                .toList();
-        return ResponseEntity.ok(remarks);
-    }
+//    @GetMapping("/{reviewedActorId}/remarks")
+//    public ResponseEntity<List<RemarkDto>> getRemarksByReviewedActor(@PathVariable Long reviewedActorId) {
+//        List<RemarkDto> remarks = remarkService.getRemarksByReviewedActor(reviewedActorId)
+//                .stream()
+//                .map(remarkMapper::toRemarkDto)
+//                .toList();
+//        return ResponseEntity.ok(remarks);
+//    }
 //    @GetMapping("/complaint")
 //    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToUser(){
 //        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(1L);
@@ -243,4 +243,42 @@ public class ExecutiveController {
         List<LeaveDto> leaves = leaveService.getLeavesByFilter(timePeriod, status);
         return ResponseEntity.ok(leaves);
     }
+
+    //    ------------------------------------------------Project---------------------------------------------------------
+    @PostMapping("/createProject")
+    public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDto projectCreationDto) {
+        Project project = projectService.createProject(projectCreationDto);
+        return ResponseEntity.ok(project);
+    }
+
+    @GetMapping("/getProjectById/{id}")
+    public ResponseEntity<Project> getProjectById(@PathVariable("id")Long projectId){
+        Project projects =projectService.getProjectById(projectId);
+        return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/getAllProject")
+    public ResponseEntity<List<Project>> getAllProject(){
+        List<Project> projects =projectService.getAllProject();
+        return ResponseEntity.ok(projects);
+    }
+    @GetMapping("/getProjectByUserId/{id}")
+    public ResponseEntity<List<Project>> getProjectByUserId(@PathVariable("id")Long userId){
+        List<Project> projects =projectService.getProjectByUserId(userId);
+        return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/searchProjectByName/{keyword}")
+    public ResponseEntity<List<Project>> searchProjectByName(@PathVariable("keyword")String keyword){
+        List<Project> projects =projectService.searchProjectByName(keyword);
+        return ResponseEntity.ok(projects);
+    }
+
+    @DeleteMapping("/deleteProject/{id}")
+    public ResponseEntity<String> deleteBlogComment(@PathVariable("id")Long projectId){
+        projectService.deleteProject(projectId);
+        return  ResponseEntity.ok("Project deleted successfully!.");
+    }
+
+
 }
