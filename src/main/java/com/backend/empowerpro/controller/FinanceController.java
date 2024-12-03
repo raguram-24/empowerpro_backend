@@ -164,11 +164,11 @@ public class FinanceController {
         return ResponseEntity.ok(complaintService.deleteComplaint(id));
     }
 
-    @GetMapping("/assigned-to-hr")
-    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
-        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
-        return ResponseEntity.ok(complaints);
-    }
+//    @GetMapping("/assigned-to-hr")
+//    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
+//        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
+//        return ResponseEntity.ok(complaints);
+//    }
 
 
     @GetMapping("/complaint/{userId}")
@@ -225,12 +225,6 @@ public class FinanceController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(leaves);
-    }
-
-    @GetMapping("/available-leaves/{userId}")
-    public ResponseEntity<Integer> getAllLeavesByUser(@PathVariable Long userId) {
-        int availableLeaves = leaveService.getAvailableLeaves(userId);
-        return ResponseEntity.ok(availableLeaves); // Wrap the integer in ResponseEntity with HTTP 200 status
     }
 
     @GetMapping("/leave-today")

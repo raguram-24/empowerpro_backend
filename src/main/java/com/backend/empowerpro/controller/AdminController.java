@@ -27,8 +27,13 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @PostMapping("/register")
+<<<<<<< HEAD
+//    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
+=======
     @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest registerRequest) {
+>>>>>>> main
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
