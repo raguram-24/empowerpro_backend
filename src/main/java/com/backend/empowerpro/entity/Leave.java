@@ -43,4 +43,7 @@ public class Leave {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private LeaveStatus status;
+
+    @Column(length = 500)
+    private String comment;
 }

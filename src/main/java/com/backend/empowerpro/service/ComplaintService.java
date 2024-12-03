@@ -10,12 +10,10 @@ public interface ComplaintService {
     public List<ComplaintDto> getAllComplaints();
     public List<ComplaintDto> getComplaintsToMe();
     public List<ComplaintDto> getComplaintsFromMyself();
-//    public String createComplaint(ComplaintCreationDto complaintCreationDto);
     public ComplaintDto saveComplaint(ComplaintCreationDto complaintCreationDto);
     public ComplaintDto getOneComplaint(Long id);
-    //    public ComplaintDto updateComplaint(Long id, ComplaintCreationDto complaintCreationDto);
     public String deleteComplaint(Long id);
-    public List<ComplaintDto> getComplaintsAssignedToHR();
     public List<ComplaintDto> getComplaintsAssignedToUser(Long userId);
     void replyToComplaint(Long complaintId, String reply);
+    public List<ComplaintDto> getComplaintsAssignedToRole(String role);
 }

@@ -20,5 +20,7 @@ public class LeaveHrDto {
     private Date endDate;
     private String reason;
     private String status;
+    private String role;
+    private String comment;
 
 }

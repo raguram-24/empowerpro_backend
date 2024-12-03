@@ -3,9 +3,7 @@ package com.backend.empowerpro.controller;
 
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
-import com.backend.empowerpro.dto.leave.LeaveCreationDto;
-import com.backend.empowerpro.dto.leave.LeaveDto;
-import com.backend.empowerpro.dto.leave.TodayLeaveDto;
+import com.backend.empowerpro.dto.leave.*;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.Complaint;
@@ -31,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/hr")
@@ -105,23 +104,6 @@ public class HrController {
         return ResponseEntity.ok(complaintService.deleteComplaint(id));
     }
 
-    @GetMapping("/assigned-to-hr")
-    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
-        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
-        return ResponseEntity.ok(complaints);
-    }
-
-    //    @PostMapping("/complaint-creation")
-    //    public ResponseEntity<ComplaintDto> saveComplaint(@RequestBody ComplaintCreationDto complaintCreationDto) {
-    //        ComplaintDto savedComplaint = complaintService.saveComplaint(complaintCreationDto);
-    //        return ResponseEntity.status(HttpStatus.CREATED).body(savedComplaint);
-    //    }
-
-//    @GetMapping("/complaint")
-//    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToUser(){
-//        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(1L);
-//        return ResponseEntity.ok(complaints);
-//    }
 
     @GetMapping("/complaint/{userId}")
     public ResponseEntity<List<ComplaintDto>> getAllComplaintsByEmployeeId(@PathVariable Long userId) {
@@ -170,6 +152,13 @@ public class HrController {
         return ResponseEntity.ok("Reply sent successfully!");
     }
 
+    @GetMapping("/complaint-role/{role}")
+    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToRole(@PathVariable String role)
+    {
+        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToRole(role);
+        return ResponseEntity.ok(complaints);
+    }
+
     @PostMapping("/leave-creation")
     public ResponseEntity<String> applyLeave(@RequestBody LeaveCreationDto leaveCreationDto) {
         leaveService.saveLeave(leaveCreationDto);
@@ -185,11 +174,15 @@ public class HrController {
         return ResponseEntity.ok(leaves);
     }
 
-    @GetMapping("/available-leaves/{userId}")
-    public ResponseEntity<Integer> getAllLeavesByUser(@PathVariable Long userId) {
-        int availableLeaves = leaveService.getAvailableLeaves(userId);
-        return ResponseEntity.ok(availableLeaves); // Wrap the integer in ResponseEntity with HTTP 200 status
+    @GetMapping("/leave-to-hr/{userId}")
+    public ResponseEntity<List<LeaveHrDto>> getLeavesForHR(@PathVariable Long userId){
+        List<LeaveHrDto> leaves = leaveService.getLeavesByAssignRole(userId);
+        if(leaves.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(leaves);
     }
+
 
     @GetMapping("/leave-today")
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
@@ -197,18 +190,28 @@ public class HrController {
         return ResponseEntity.ok(todayLeaves);
     }
 
-
-    @GetMapping("/leave-get-filtered")
-    public ResponseEntity<List<LeaveDto>> getAllLeaves(
-            @RequestParam(required = false) String timePeriod,
-            @RequestParam(required = false) String status) {
-        List<LeaveDto> leaves = leaveService.getLeavesByFilter(timePeriod, status);
-        return ResponseEntity.ok(leaves);
+    @GetMapping("/leave-request-getOne/{leaveId}")
+    public ResponseEntity<LeaveHrDto> getOneLeaveRequest(@PathVariable Long leaveId){
+        return ResponseEntity.ok(leaveService.getOneRequestLeave(leaveId));
     }
 
+    @PutMapping("/leave-set-rejected/{leaveId}")
+    public ResponseEntity<?> setLeaveRejected(@PathVariable Long leaveId, @RequestParam String comment){
+        System.out.println(comment);
+        leaveService.setLeaveRejected(leaveId, comment);
+        return ResponseEntity.ok("Leave with ID " + leaveId + " has been rejected.");
+    }
 
+    @PutMapping("/leave-set-approved/{leaveId}")
+    public ResponseEntity<?> setLeaveApproved(@PathVariable Long leaveId, @RequestParam String comment){
+        leaveService.setLeaveApproved(leaveId, comment);
+        return ResponseEntity.ok("Leave with ID " + leaveId + " has been approved.");
+    }
 
-
+    @GetMapping("/leave-get-all")
+    public ResponseEntity<List<LeaveDto>> getAllLeaves(){
+        return ResponseEntity.ok().body(leaveService.getAllLeaves());
+    }
 
 
 

@@ -46,12 +46,6 @@ public class EmployeeController {
         return objectMapper.readValue(employeeUpdateReq, EmployeeUpdateRequest.class);
     }
 
-    @PostMapping("/leave-creation")
-    public ResponseEntity<String> applyLeave(@RequestBody LeaveCreationDto leaveCreationDto) {
-        leaveService.saveLeave(leaveCreationDto);
-        return ResponseEntity.ok("Leave applied successfully!");
-    }
-
     @PostMapping("/complaint-creation")
     public ResponseEntity<ComplaintDto> createComplaint(
             @RequestParam Long senderId,
@@ -89,23 +83,12 @@ public class EmployeeController {
         return ResponseEntity.ok(complaintService.deleteComplaint(id));
     }
 
-    @GetMapping("/assigned-to-hr")
-    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
-        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
-        return ResponseEntity.ok(complaints);
-    }
-
-    //    @PostMapping("/complaint-creation")
-    //    public ResponseEntity<ComplaintDto> saveComplaint(@RequestBody ComplaintCreationDto complaintCreationDto) {
-    //        ComplaintDto savedComplaint = complaintService.saveComplaint(complaintCreationDto);
-    //        return ResponseEntity.status(HttpStatus.CREATED).body(savedComplaint);
-    //    }
-
-//    @GetMapping("/complaint")
-//    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToUser(){
-//        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(1L);
+//    @GetMapping("/assigned-to-hr")
+//    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
+//        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
 //        return ResponseEntity.ok(complaints);
 //    }
+
 
     @GetMapping("/complaint/{userId}")
     public ResponseEntity<List<ComplaintDto>> getAllComplaintsByEmployeeId(@PathVariable Long userId) {
@@ -154,6 +137,12 @@ public class EmployeeController {
         return ResponseEntity.ok("Reply sent successfully!");
     }
 
+    @PostMapping("/leave-creation")
+    public ResponseEntity<String> applyLeave(@RequestBody LeaveCreationDto leaveCreationDto) {
+        leaveService.saveLeave(leaveCreationDto);
+        return ResponseEntity.ok("Leave applied successfully!");
+    }
+
     @GetMapping("/leave/{userId}")
     public ResponseEntity<List<LeaveDto>> getAllLeavesByUserId(@PathVariable Long userId) {
         List<LeaveDto> leaves = leaveService.getLeavesByUser(userId);
@@ -163,27 +152,10 @@ public class EmployeeController {
         return ResponseEntity.ok(leaves);
     }
 
-    @GetMapping("/available-leaves/{userId}")
-    public ResponseEntity<Integer> getAllLeavesByUser(@PathVariable Long userId) {
-        int availableLeaves = leaveService.getAvailableLeaves(userId);
-        return ResponseEntity.ok(availableLeaves); // Wrap the integer in ResponseEntity with HTTP 200 status
-    }
-
     @GetMapping("/leave-today")
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
         return ResponseEntity.ok(todayLeaves);
     }
-
-
-    @GetMapping("/leave-get-filtered")
-    public ResponseEntity<List<LeaveDto>> getAllLeaves(
-            @RequestParam(required = false) String timePeriod,
-            @RequestParam(required = false) String status) {
-        List<LeaveDto> leaves = leaveService.getLeavesByFilter(timePeriod, status);
-        return ResponseEntity.ok(leaves);
-    }
-
-
 
 }
