@@ -60,7 +60,7 @@ public class AccountsServiceImp implements AccountsService {
     public AccountsDto getOneAccounts(Long id) {
         try{
             //Fetching Accounts by ID;
-            Optional<Accounts> accounts = accountsRepo.findById(id);
+             Optional<Accounts> accounts = accountsRepo.findById(id);
             if(accounts.isPresent()){
                 Accounts accountsResult = accounts.get();
                 logger.info("Accounts of {} has been fetched Successfully", id);

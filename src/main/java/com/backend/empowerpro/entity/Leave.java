@@ -46,4 +46,5 @@ public class Leave {
 
     @Column(length = 500)
     private String comment;
+
 }

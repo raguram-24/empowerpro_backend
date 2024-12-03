@@ -30,11 +30,9 @@ public class Employee implements UserDetails {
     private Long id;
 
     @Column(name = "first_name", length = 50, nullable = false)
-    @NotBlank(message = "firstname Cannot be Empty")
     private String firstName;
 
     @Column(name = "last_name", length = 50, nullable = false)
-    @NotBlank(message = "lastname Cannot be Empty")
     private String lastName;
 
     @Column(name = "address", length = 500, nullable = false)
@@ -76,11 +74,11 @@ public class Employee implements UserDetails {
     @Column(name = "experiences", length = 50000)
     private String experiences;
 
-    @OneToOne(mappedBy = "employee")
-    private RefreshToken refreshToken;
+//    @OneToOne(mappedBy = "employee")
+//    private RefreshToken refreshToken;
 
-    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
-    private LeaveBalance leaveBalance;
+//    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
+//    private LeaveBalance leaveBalance;
 
     private String profile;
 
@@ -108,6 +106,8 @@ public class Employee implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }
 
 

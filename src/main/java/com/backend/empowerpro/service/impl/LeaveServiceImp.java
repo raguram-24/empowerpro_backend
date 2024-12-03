@@ -3,7 +3,10 @@ package com.backend.empowerpro.service.impl;
 import com.backend.empowerpro.auth.entity.Employee;
 import com.backend.empowerpro.auth.entity.EmployeeRole;
 import com.backend.empowerpro.auth.repository.EmployeeRepository;
-import com.backend.empowerpro.dto.leave.*;
+import com.backend.empowerpro.dto.leave.LeaveCreationDto;
+import com.backend.empowerpro.dto.leave.LeaveDto;
+import com.backend.empowerpro.dto.leave.LeaveHrDto;
+import com.backend.empowerpro.dto.leave.TodayLeaveDto;
 import com.backend.empowerpro.entity.*;
 import com.backend.empowerpro.exception.ComplaintNotFoundException;
 import com.backend.empowerpro.exception.LeaveNotFoundException;
@@ -11,7 +14,6 @@ import com.backend.empowerpro.exception.VacancyNotFoundException;
 import com.backend.empowerpro.repository.LeaveBalanceRepo;
 import com.backend.empowerpro.repository.LeaveRepo;
 import com.backend.empowerpro.service.LeaveService;
-import com.backend.empowerpro.utils.LeaveBalanceMapper;
 import com.backend.empowerpro.utils.LeavesMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +37,6 @@ public class LeaveServiceImp implements LeaveService {
     private final LeaveRepo leaveRepo;
     private final LeaveBalanceRepo leaveBalanceRepo;
     private final LeavesMapper leavesMapper;
-    private final LeaveBalanceMapper leaveBalanceMapper;
 
     @Override
     public void saveLeave(LeaveCreationDto leaveCreationDto) {
@@ -76,13 +78,6 @@ public class LeaveServiceImp implements LeaveService {
         }
 
     }
-
-//    @Override
-//    public Integer getAvailableLeaves(Long userId) {
-//        return leaveBalanceRepo.findByEmployee_Id(userId)
-//                .map(LeaveBalance::getTotalAvailableLeaves) // Assuming a getter method in LeaveBalance
-//                .orElseThrow(() -> new EntityNotFoundException("Leave balance not found for Employee ID: " + userId));
-//    }
 
     @Override
     public List<TodayLeaveDto> getTodayLeaves() {
@@ -207,6 +202,5 @@ public class LeaveServiceImp implements LeaveService {
             throw new RuntimeException("An unexcepted error occured", e);
         }
     }
-
 
 }

@@ -29,4 +29,6 @@ public interface LeaveRepo extends JpaRepository<Leave, Long> {
     @Modifying
     @Query("UPDATE Leave l SET l.status = :status , l.comment = :comment WHERE l.id = :id")
     void updateLeaveStatus(@Param("id") Long id, @Param("status") LeaveStatus status,@Param("comment")String comment);
+
+//    List<Leave> findByStatusAndDateRange(String status, LocalDate startDate);
 }

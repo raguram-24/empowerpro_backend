@@ -11,14 +11,16 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
 
     private static final String SECRET_KEY = "BF7FD11ACE545745B7BA1AF98B6F156D127BC7BB544BAB6A4FD74E4FC7";
-    private static final long EXPIRATION_TIME = 86400000;
+    private static final long EXPIRATION_TIME = 28800000;
     // extract username from JWT
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -56,6 +58,8 @@ public class JwtService {
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ) {
+
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

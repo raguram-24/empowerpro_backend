@@ -7,7 +7,9 @@ import com.backend.empowerpro.auth.utils.RegisterRequest;
 import com.backend.empowerpro.service.EmployeeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,8 +27,13 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @PostMapping("/register")
+<<<<<<< HEAD
 //    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
+=======
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest registerRequest) {
+>>>>>>> main
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
