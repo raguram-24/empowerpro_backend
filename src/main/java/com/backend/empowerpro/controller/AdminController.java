@@ -4,6 +4,7 @@ import com.backend.empowerpro.auth.service.AuthService;
 import com.backend.empowerpro.auth.utils.AuthResponse;
 import com.backend.empowerpro.auth.utils.EmployeeResponse;
 import com.backend.empowerpro.auth.utils.RegisterRequest;
+import com.backend.empowerpro.dto.employee.EmployeeDto;
 import com.backend.empowerpro.service.EmployeeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,8 +45,8 @@ public class AdminController {
 
     @GetMapping("/{id}")
 //    @PreAuthorize("hasAuthority('Admin')")
-    public ResponseEntity<EmployeeResponse> getOneEmployeeHandler(@PathVariable Long id) {
-        return new ResponseEntity<>(employeeService.getOneEmployee(id), HttpStatus.FOUND);
+    public ResponseEntity<EmployeeDto> getOneEmployeeHandler(@PathVariable Long id) {
+        return new ResponseEntity<>(employeeService.getEmployeeById(id), HttpStatus.FOUND);
     }
 
     @GetMapping("/open")

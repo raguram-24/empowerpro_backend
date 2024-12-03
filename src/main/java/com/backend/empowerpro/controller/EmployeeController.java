@@ -7,9 +7,12 @@ import com.backend.empowerpro.dto.attendance.CreateAttendanceDto;
 
 import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
 import com.backend.empowerpro.dto.employee.EmployeeDto;
+import com.backend.empowerpro.entity.PayRoll;
 import com.backend.empowerpro.service.EmployeeService;
+import com.backend.empowerpro.service.PayrollService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
@@ -44,6 +47,7 @@ public class EmployeeController {
     private final AttendanceService attendanceService;
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
+    private final PayrollService payrollService;
 
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
 
@@ -54,8 +58,6 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
-<<<<<<< HEAD
-=======
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
@@ -79,7 +81,7 @@ public class EmployeeController {
 
     // ==================== Complaint Management ====================
 
->>>>>>> main
+
     @PostMapping("/complaint-creation")
     public ResponseEntity<ComplaintDto> createComplaint(
             @RequestParam Long senderId,
@@ -117,7 +119,7 @@ public class EmployeeController {
         return ResponseEntity.ok(complaintService.deleteComplaint(id));
     }
 
-<<<<<<< HEAD
+
 //    @GetMapping("/assigned-to-hr")
 //    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
 //        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
@@ -134,8 +136,6 @@ public class EmployeeController {
         return ResponseEntity.ok(complaints);
     }
 
-=======
->>>>>>> main
     @GetMapping("/complaint-file")
     public ResponseEntity<Resource> getComplaintFile(@RequestParam String filePath) throws IOException {
         File file = new File(filePath);
@@ -170,21 +170,23 @@ public class EmployeeController {
         return ResponseEntity.ok(leaves);
     }
 
-<<<<<<< HEAD
-=======
+
     @GetMapping("/available-leaves/{userId}")
     public ResponseEntity<Integer> getAvailableLeaves(@PathVariable Long userId) {
         return ResponseEntity.ok(leaveService.getAvailableLeaves(userId));
     }
 
->>>>>>> main
     @GetMapping("/leave-today")
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         return ResponseEntity.ok(leaveService.getTodayLeaves());
     }
 
-<<<<<<< HEAD
-=======
+    @PreAuthorize("hasAuthority('Employee')")
+    @GetMapping("/get-slip/{id}")
+    public ResponseEntity<PayRoll> getOnePayRoll(@PathVariable Long id){
+        return ResponseEntity.ok(payrollService.getOnePayRoll(id));
+    }
+
 
 
     @GetMapping("/leave-get-filtered")
@@ -221,5 +223,5 @@ public class EmployeeController {
 
 
 
->>>>>>> main
+
 }

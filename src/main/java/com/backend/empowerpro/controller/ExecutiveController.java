@@ -4,16 +4,15 @@ import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
-import com.backend.empowerpro.service.ComplaintService;
-import com.backend.empowerpro.service.LeaveService;
+import com.backend.empowerpro.dto.payroll.PayRollViewDto;
+import com.backend.empowerpro.entity.PayRoll;
+import com.backend.empowerpro.service.*;
 import com.backend.empowerpro.utils.ReplyRequest;
 
 import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationCreationDto;
 import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationDto;
 import com.backend.empowerpro.dto.remark.RemarkCreationDto;
 import com.backend.empowerpro.dto.remark.RemarkDto;
-import com.backend.empowerpro.service.PerformanceEvaluationService;
-import com.backend.empowerpro.service.RemarkService;
 import com.backend.empowerpro.utils.PerformanceEvaluationMapper;
 import com.backend.empowerpro.utils.RemarkMapper;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ public class ExecutiveController {
     private final RemarkService remarkService;
     private final PerformanceEvaluationMapper performanceEvaluationMapper;
     private final RemarkMapper remarkMapper;
-
+    private final PayrollService payrollService;
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
 
@@ -172,6 +171,17 @@ public class ExecutiveController {
             @RequestParam(required = false) String status) {
         List<LeaveDto> leaves = leaveService.getLeavesByFilter(timePeriod, status);
         return ResponseEntity.ok(leaves);
+    }
+
+
+    @GetMapping("/slip-all")
+    public ResponseEntity<List<PayRollViewDto>> getallslip(){
+        return ResponseEntity.ok(payrollService.getAllPayRoll());
+    }
+
+    @PutMapping("/slip-permission/{id}")
+    public ResponseEntity<PayRoll> changeStatus(@PathVariable Long id){
+        return ResponseEntity.ok(payrollService.updateStatus(id));
     }
 
     /**
