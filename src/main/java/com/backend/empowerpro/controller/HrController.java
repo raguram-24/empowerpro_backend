@@ -1,19 +1,15 @@
 package com.backend.empowerpro.controller;
 
-
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
-<<<<<<< HEAD
-import com.backend.empowerpro.dto.leave.*;
-=======
-import com.backend.empowerpro.dto.events.EventCreationDto;
-import com.backend.empowerpro.dto.events.EventDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
+import com.backend.empowerpro.dto.leave.LeaveHrDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
+import com.backend.empowerpro.dto.events.EventCreationDto;
+import com.backend.empowerpro.dto.events.EventDto;
 import com.backend.empowerpro.dto.medicalClaim.MedicalClaimCreation;
 import com.backend.empowerpro.dto.medicalClaim.MedicalClaimDto;
->>>>>>> main
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.Complaint;
@@ -21,9 +17,12 @@ import com.backend.empowerpro.entity.MedicalClaim;
 import com.backend.empowerpro.repository.ComplaintRepo;
 import com.backend.empowerpro.service.*;
 import com.backend.empowerpro.utils.ReplyRequest;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -43,6 +42,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("api/v1/hr")

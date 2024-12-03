@@ -47,15 +47,12 @@ public class EmployeeController {
 
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
 
-    // ==================== Employee CRUD ====================
 
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
-<<<<<<< HEAD
-=======
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
@@ -77,9 +74,6 @@ public class EmployeeController {
         return ResponseEntity.ok("Employee deleted successfully.");
     }
 
-    // ==================== Complaint Management ====================
-
->>>>>>> main
     @PostMapping("/complaint-creation")
     public ResponseEntity<ComplaintDto> createComplaint(
             @RequestParam Long senderId,
@@ -117,12 +111,6 @@ public class EmployeeController {
         return ResponseEntity.ok(complaintService.deleteComplaint(id));
     }
 
-<<<<<<< HEAD
-//    @GetMapping("/assigned-to-hr")
-//    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
-//        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
-//        return ResponseEntity.ok(complaints);
-//    }
 
 
     @GetMapping("/complaint/{userId}")
@@ -134,8 +122,6 @@ public class EmployeeController {
         return ResponseEntity.ok(complaints);
     }
 
-=======
->>>>>>> main
     @GetMapping("/complaint-file")
     public ResponseEntity<Resource> getComplaintFile(@RequestParam String filePath) throws IOException {
         File file = new File(filePath);
@@ -150,13 +136,7 @@ public class EmployeeController {
                 .body(resource);
     }
 
-    // ==================== Leave Management ====================
 
-    @PostMapping("/leave-creation")
-    public ResponseEntity<String> applyLeave(@RequestBody LeaveCreationDto leaveCreationDto) {
-        leaveService.saveLeave(leaveCreationDto);
-        return ResponseEntity.ok("Leave applied successfully!");
-    }
 
     @PostMapping("/leave-creation")
     public ResponseEntity<String> applyLeave(@RequestBody LeaveCreationDto leaveCreationDto) {
@@ -170,30 +150,12 @@ public class EmployeeController {
         return ResponseEntity.ok(leaves);
     }
 
-<<<<<<< HEAD
-=======
-    @GetMapping("/available-leaves/{userId}")
-    public ResponseEntity<Integer> getAvailableLeaves(@PathVariable Long userId) {
-        return ResponseEntity.ok(leaveService.getAvailableLeaves(userId));
-    }
 
->>>>>>> main
     @GetMapping("/leave-today")
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         return ResponseEntity.ok(leaveService.getTodayLeaves());
     }
 
-<<<<<<< HEAD
-=======
-
-
-    @GetMapping("/leave-get-filtered")
-    public ResponseEntity<List<LeaveDto>> getAllLeaves(
-            @RequestParam(required = false) String timePeriod,
-            @RequestParam(required = false) String status) {
-        List<LeaveDto> leaves = leaveService.getLeavesByFilter(timePeriod, status);
-        return ResponseEntity.ok(leaves);
-    }
 
     @PostMapping("/createAttendance")
     public ResponseEntity<Attendance> createAttendance(
@@ -219,7 +181,4 @@ public class EmployeeController {
         return ResponseEntity.ok(attendance);
     }
 
-
-
->>>>>>> main
 }
