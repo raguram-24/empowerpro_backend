@@ -23,5 +23,7 @@ public class EmployeeResponse {
     private String experiences;
     private String profile;
     private String profilePath;
+
+
 }
 

@@ -11,9 +11,11 @@ import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
 import com.backend.empowerpro.dto.suppliers.SuppliersCreationDto;
 import com.backend.empowerpro.dto.suppliers.SuppliersDto;
+import com.backend.empowerpro.dto.tax.TaxCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyCreationDto;
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.BankDetails;
+import com.backend.empowerpro.entity.Tax;
 import com.backend.empowerpro.service.*;
 import com.backend.empowerpro.utils.ReplyRequest;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,7 @@ public class FinanceController {
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
     private final BankService bankService;
+    private final TaxService taxService;
 
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
     private final SupplierService supplierService;
@@ -232,6 +235,13 @@ public class FinanceController {
         return ResponseEntity.ok(bankService.createDetail(bankCreationDto));
 
     }
+
+    @PreAuthorize("hasAuthority('Finance')")
+    @PostMapping("/tax-creation")
+    public ResponseEntity<Tax> createTax(@RequestBody TaxCreationDto taxCreationDto){
+        return ResponseEntity.ok(taxService.createTax(taxCreationDto));
+    }
+
 
 
 }
