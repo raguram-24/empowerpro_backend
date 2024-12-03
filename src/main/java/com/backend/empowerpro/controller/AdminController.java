@@ -38,9 +38,9 @@ public class AdminController {
         return objectMapper.readValue(registerRequest, RegisterRequest.class);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EmployeeResponse> getOneEmployeeHandler(@PathVariable Long id) {
-        return new ResponseEntity<>(employeeService.getOneEmployee(id), HttpStatus.FOUND);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<EmployeeResponse> getOneEmployeeHandler(@PathVariable Long id) {
+//        return new ResponseEntity<>(employeeService.getOneEmployee(id), HttpStatus.FOUND);
+//    }
 
 }

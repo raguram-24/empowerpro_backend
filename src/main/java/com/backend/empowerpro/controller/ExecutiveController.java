@@ -91,12 +91,6 @@ public class ExecutiveController {
         return ResponseEntity.ok(complaintService.deleteComplaint(id));
     }
 
-    @GetMapping("/assigned-to-hr")
-    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
-        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
-        return ResponseEntity.ok(complaints);
-    }
-
     @GetMapping("/complaint/{userId}")
     public ResponseEntity<List<ComplaintDto>> getAllComplaintsByEmployeeId(@PathVariable Long userId) {
         List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(userId);
@@ -153,26 +147,12 @@ public class ExecutiveController {
         return ResponseEntity.ok(leaves);
     }
 
-    @GetMapping("/available-leaves/{userId}")
-    public ResponseEntity<Integer> getAllLeavesByUser(@PathVariable Long userId) {
-        int availableLeaves = leaveService.getAvailableLeaves(userId);
-        return ResponseEntity.ok(availableLeaves); // Wrap the integer in ResponseEntity with HTTP 200 status
-    }
-
     @GetMapping("/leave-today")
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
         return ResponseEntity.ok(todayLeaves);
     }
 
-
-    @GetMapping("/leave-get-filtered")
-    public ResponseEntity<List<LeaveDto>> getAllLeaves(
-            @RequestParam(required = false) String timePeriod,
-            @RequestParam(required = false) String status) {
-        List<LeaveDto> leaves = leaveService.getLeavesByFilter(timePeriod, status);
-        return ResponseEntity.ok(leaves);
-    }
 
     /**
      * Enable or disable performance evaluation functionality.
