@@ -1,11 +1,15 @@
 package com.backend.empowerpro.controller;
 
 import com.backend.empowerpro.auth.utils.EmployeeUpdateRequest;
+import com.backend.empowerpro.dto.attendance.CheckoutAttendanceDto;
+import com.backend.empowerpro.dto.attendance.CreateAttendanceDto;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
+import com.backend.empowerpro.entity.Attendance;
+import com.backend.empowerpro.service.AttendanceService;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.EmployeeService;
 import com.backend.empowerpro.service.LeaveService;
@@ -36,6 +40,7 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final AttendanceService attendanceService;
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
 
@@ -184,6 +189,29 @@ public class EmployeeController {
         return ResponseEntity.ok(leaves);
     }
 
+    @PostMapping("/createAttendance")
+    public ResponseEntity<Attendance> createAttendance(
+            @RequestBody CreateAttendanceDto createAttendanceDto
+    ){
+      Attendance attendance =   attendanceService.createAttendance(createAttendanceDto);
+      return ResponseEntity.ok(attendance);
+    }
+
+    @PostMapping("/checkoutAttendance/{id}")
+    public ResponseEntity<Attendance> checkoutAttendance(
+            @RequestBody CheckoutAttendanceDto checkoutAttendanceDto,
+            @PathVariable("id") Long id
+    ){
+
+        Attendance attendance = attendanceService.checkoutUpdateAttendance(checkoutAttendanceDto,id);
+        return ResponseEntity.ok(attendance);
+    }
+
+    @GetMapping("/getAllAttendance")
+    public ResponseEntity<List<Attendance>> getAllAttendance() {
+        List<Attendance> attendance = attendanceService.getAllAttendance();
+        return ResponseEntity.ok(attendance);
+    }
 
 
 }
