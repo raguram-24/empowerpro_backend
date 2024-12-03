@@ -5,8 +5,12 @@ import com.backend.empowerpro.auth.entity.EmployeeRole;
 import com.backend.empowerpro.auth.repository.EmployeeRepository;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
+import com.backend.empowerpro.dto.leave.LeaveHrDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
 import com.backend.empowerpro.entity.*;
+import com.backend.empowerpro.exception.ComplaintNotFoundException;
+import com.backend.empowerpro.exception.LeaveNotFoundException;
+import com.backend.empowerpro.exception.VacancyNotFoundException;
 import com.backend.empowerpro.repository.LeaveBalanceRepo;
 import com.backend.empowerpro.repository.LeaveRepo;
 import com.backend.empowerpro.service.LeaveService;
@@ -20,7 +24,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.*;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,13 +80,6 @@ public class LeaveServiceImp implements LeaveService {
     }
 
     @Override
-    public Integer getAvailableLeaves(Long userId) {
-        return leaveBalanceRepo.findByEmployee_Id(userId)
-                .map(LeaveBalance::getTotalAvailableLeaves) // Assuming a getter method in LeaveBalance
-                .orElseThrow(() -> new EntityNotFoundException("Leave balance not found for Employee ID: " + userId));
-    }
-
-    @Override
     public List<TodayLeaveDto> getTodayLeaves() {
         LocalDate today = LocalDate.now();
         List<Object[]> todayLeaves = leaveRepo.findLeavesForToday(today);
@@ -97,33 +95,112 @@ public class LeaveServiceImp implements LeaveService {
     }
 
     @Override
-    public List<LeaveDto> getLeavesByFilter(String timePeriod, String status){
-        LocalDate startDate = calculateStartDate(timePeriod);
+    public List<LeaveHrDto> getLeavesByAssignRole(Long loggedInUser) {
+        try{
+            List<Leave> leaves = leaveRepo.findLeavesAssignedToRole(loggedInUser);
+            logger.info("All leaves have been fetched successfully");
+            return leaves.stream()
+                    .map(leave -> LeaveHrDto.builder()
+                            .id(leave.getId())
+                            .senderId(leave.getEmployee().getId())  // Assuming employee's ID is the sender
+                            .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())  // Assuming there's a method for full name
+                            .leaveType(leave.getLeaveType().toString())  // Convert Enum to String
+                            .leaveDays(leave.getLeaveDays())
+                            .startDate(java.sql.Date.valueOf(leave.getStartDate()))  // Convert LocalDate to java.sql.Date
+                            .endDate(java.sql.Date.valueOf(leave.getEndDate()))  // Convert LocalDate to java.sql.Date
+                            .reason(leave.getReason())
+                            .status(leave.getStatus().toString())  // Convert Enum to String
+                            .build())  // Finalize the object creation
+                    .collect(Collectors.toList());
 
-//        try{
-//            List<Leave> filteredLeaves = leaveRepo.findByStatusAndDateRange(status, startDate);
-//            logger.info("All Filtered leaves has been Fetched Successfully");
-//            return filteredLeaves.stream()
-//                    .map(leavesMapper::toLeaveDto)
-//                    .collect(Collectors.toList());
-//        } catch (Exception e) {
-//            logger.error("An unexpected error occurred while fetching filtered leaves: {}", e.getMessage(), e);
-//            throw new RuntimeException("An unexpected error occurred while fetching filtered leaves", e);
-//        }
-        return null;
-    }
-
-    private LocalDate calculateStartDate(String timePeriod){
-        if ("Last 3 Months".equals(timePeriod)){
-            return LocalDate.now().minusMonths(3);
-        } else if ("Last 6 Months".equals(timePeriod)) {
-            return LocalDate.now().minusMonths(6);
-        } else if ("Last 12 Months".equals(timePeriod)) {
-            return LocalDate.now().minusMonths(12);
+        } catch (Exception e) {
+            logger.error("An error occurred while fetching leaves", e);
+            throw new RuntimeException("An unexpected error occurred", e);
         }
 
-        return LocalDate.now().minusDays(30);
     }
 
+    @Override
+    public LeaveHrDto getOneRequestLeave(Long id) {
+        try{
+            Optional<Leave> leave = leaveRepo.findById(id);
+
+            if(leave.isPresent()){
+                Leave leaveResult = leave.get();
+                logger.info("leave has been fetch successfully with id ", id);
+
+                return LeaveHrDto.builder()
+                        .id(leaveResult.getId())
+                        .senderId(leaveResult.getEmployee().getId())
+                        .employeeName(leaveResult.getEmployee().getFirstName() + " " + leaveResult.getEmployee().getLastName())
+                        .leaveType(leaveResult.getLeaveType().toString())
+                        .leaveDays(leaveResult.getLeaveDays())
+                        .startDate(java.sql.Date.valueOf(leaveResult.getStartDate())) // Convert LocalDate to java.sql.Date
+                        .endDate(java.sql.Date.valueOf(leaveResult.getEndDate())) // Convert LocalDate to java.sql.Date
+                        .reason(leaveResult.getReason())
+                        .role(leaveResult.getEmployee().getRole().name())
+                        .comment(leaveResult.getComment())
+                        .status(leaveResult.getStatus().toString()) // Convert Enum to String
+                        .build();
+            }else{
+                throw new LeaveNotFoundException("Leave with ID " + id + " not found");
+            }
+        }catch (Exception e){
+            logger.error("An unexpected error occurred while fetching leave: {}", e.getMessage(), e);
+            throw new RuntimeException("An unexpected error occurred while fetching leave", e);
+        }
+    }
+
+    @Override
+    public void setLeaveRejected(Long id, String comment) {
+        try {
+            Optional<Leave> leaveOptional = leaveRepo.findById(id);
+            if (leaveOptional.isPresent()) {
+                Leave leave = leaveOptional.get();
+
+                // Ensure the leave exists and can be rejected
+                leaveRepo.updateLeaveStatus(id, LeaveStatus.REJECTED, comment);
+                logger.info("Leave with ID {} has been rejected successfully", id);
+            } else {
+                throw new LeaveNotFoundException("Leave not found for ID: " + id);
+            }
+        } catch (Exception e) {
+            logger.error("An error occurred while rejecting leave with ID {}: {}", id, e.getMessage(), e);
+            throw new RuntimeException("Failed to reject leave", e);
+        }
+    }
+
+    @Override
+    public void setLeaveApproved(Long id, String comment) {
+        try {
+            Optional<Leave> leaveOptional = leaveRepo.findById(id);
+            if (leaveOptional.isPresent()) {
+                Leave leave = leaveOptional.get();
+
+                // Ensure the leave exists and can be rejected
+                leaveRepo.updateLeaveStatus(id, LeaveStatus.APPROVED, comment);
+                logger.info("Leave with ID {} has been approved successfully", id);
+            } else {
+                throw new LeaveNotFoundException("Leave not found for ID: " + id);
+            }
+        } catch (Exception e) {
+            logger.error("An error occurred while approving leave with ID {}: {}", id, e.getMessage(), e);
+            throw new RuntimeException("Failed to approve leave", e);
+        }
+    }
+
+    @Override
+    public List<LeaveDto> getAllLeaves() {
+        try{
+            List<Leave> leaves = leaveRepo.findAll();
+            logger.info("All leaves has been fetched successfully");
+            return leaves.stream()
+                    .map(leavesMapper::toLeaveDto)
+                    .collect(Collectors.toList());
+        }catch (Exception e){
+            logger.error("An error occured while fetching leaves");
+            throw new RuntimeException("An unexcepted error occured", e);
+        }
+    }
 
 }

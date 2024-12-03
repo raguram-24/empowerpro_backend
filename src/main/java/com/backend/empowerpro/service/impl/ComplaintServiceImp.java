@@ -19,10 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,13 +65,12 @@ public class ComplaintServiceImp implements ComplaintService {
     @Override
     public ComplaintDto saveComplaint(ComplaintCreationDto complaintCreationDto) {
         try {
-            // Convert DTO to Complaint entity
+
             Employee sender = employeeRepo.findById(complaintCreationDto.getSenderId())
                     .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + complaintCreationDto.getSenderId()));
             Complaint complaint = complaintMapper.toComplaint(complaintCreationDto);
             complaint.setSender(sender);
 
-            // Save the complaint to the database
             Complaint savedComplaint = complaintRepo.save(complaint);
 
             logger.info("Complaint has been created successfully: {}", savedComplaint);
@@ -87,25 +83,6 @@ public class ComplaintServiceImp implements ComplaintService {
             throw new RuntimeException("An unexpected error occurred while creating complaint", e);
         }
     }
-
-//    @Override
-//    public String createComplaint(ComplaintCreationDto complaintCreationDto) {
-//        try {
-//            // Convert DTO to Complaint entity
-//            Complaint complaint = complaintMapper.toComplaint(complaintCreationDto);
-//
-//            // Save the complaint to the database
-//            Complaint savedComplaint = complaintRepo.save(complaint);
-//
-//            logger.info("Complaint has been created successfully: {}", complaint);
-//            return "Complaint created successfully with ID: " + complaint.getId();
-//
-//        }catch (Exception e) {
-//            logger.error("An unexpected error occurred while creating complaint: {}", e.getMessage(), e);
-//            throw new RuntimeException("An unexpected error occurred while creating complaint", e);
-//        }
-//    }
-
 
 
     @Override
@@ -125,35 +102,6 @@ public class ComplaintServiceImp implements ComplaintService {
             throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
         }
     }
-
-//    @Override
-//    public ComplaintDto updateComplaint(Long id, ComplaintCreationDto complaintCreationDto) {
-//        try{
-//            Optional<Complaint> complaint = complaintRepo.findById(id);
-//            if(complaint.isPresent()){
-//                Complaint complaintResult = complaint.get();
-//                logger.info("Complaint of {} has been fetched Successfully", id);
-//                complaintResult.setStatus(complaintCreationDto.getStatus());
-//                complaintResult.setDate(new Date());
-//                complaintResult.setAbout(complaintCreationDto.getAbout());
-//                complaintResult.setSender(complaintCreationDto.getSender());
-//                complaintResult.setAssignedTo(complaintCreationDto.getAssignedTo());
-//                complaintResult.setDescription(complaintCreationDto.getDescription());
-//                complaintResult.setReply(complaintCreationDto.getReply());
-//                complaintResult.setFilesToUpload(complaintCreationDto.getFilesToUpload());
-//                Complaint result = complaintRepo.save(complaintResult);
-//                logger.info("Complaint of {} has been Updated Successfully", id);
-//                return complaintMapper.toComplaintDto(result);
-//            }else{
-//                logger.error("Not found Complaint {}",id);
-//                throw new ComplaintNotFoundException("Not found");
-//            }
-//
-//        } catch (Exception e) {
-//            logger.error("An unexpected error occurred while Updating complaints: {}", e.getMessage(), e);
-//            throw new RuntimeException("An unexpected error occurred while Updating complaints", e);
-//        }
-//    }
 
     @Override
     public String deleteComplaint(Long id) {
@@ -178,20 +126,6 @@ public class ComplaintServiceImp implements ComplaintService {
         return List.of();
     }
 
-
-//    @Override
-//    public List<ComplaintDto> getComplaintsAssignedToHR() {
-//        try{
-//            List<Complaint> complaints = complaintRepo.findByAssignedTo("HR");
-//            logger.info("All Complaints has been Fetched Successfully");
-//            return complaints.stream()
-//                    .map(complaintMapper::toComplaintDto)
-//                    .collect(Collectors.toList());
-//        } catch (Exception e) {
-//            logger.error("An unexpected error occurred while fetching complaints: {}", e.getMessage(), e);
-//            throw new RuntimeException("An unexpected error occurred while fetching complaints", e);
-//        }
-//    }
 
     @Override
     public List<ComplaintDto> getComplaintsAssignedToUser(Long userId) {
