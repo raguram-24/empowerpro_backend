@@ -205,7 +205,6 @@ public class HrController {
         return ResponseEntity.ok(leaves);
     }
 
-
     @GetMapping("/leave-today")
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();

@@ -1,6 +1,7 @@
 package com.backend.empowerpro.entity;
 import com.backend.empowerpro.auth.entity.Employee;
 
+import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,7 +20,7 @@ public class PerformanceEvaluation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "actor_id", nullable = false)
     private Employee actor;
 
@@ -40,6 +41,16 @@ public class PerformanceEvaluation {
 
     public void setFinalFeedback(String finalFeedback) {
         this.finalFeedback = finalFeedback;
+    }
+
+    public static PerformanceEvaluationDto toPerformanceEvaluationDto(PerformanceEvaluation performanceEvaluation) {
+        PerformanceEvaluationDto dto = new PerformanceEvaluationDto();
+        dto.setId(performanceEvaluation.getId());
+        dto.setActor(performanceEvaluation.getActor().getId());  // Get the actor's ID
+        dto.setFinalFeedback(performanceEvaluation.getFinalFeedback());
+        dto.setCreatedAt(performanceEvaluation.getCreatedAt());
+        // Map remarks here as well if needed
+        return dto;
     }
 
 }

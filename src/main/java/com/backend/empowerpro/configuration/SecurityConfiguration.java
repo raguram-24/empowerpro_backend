@@ -28,6 +28,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/v1/auth/**", "/file/**").permitAll();
                     auth.requestMatchers("/api/v1/admin/**").permitAll();
+                    auth.requestMatchers("/api/v1/review/**").permitAll();
                     auth.requestMatchers("/api/v1/hr/**").permitAll();
                     auth.requestMatchers("/api/v1/employee/**").permitAll();
                     auth.requestMatchers("/api/v1/executive/**").permitAll();
