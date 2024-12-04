@@ -7,9 +7,12 @@ import com.backend.empowerpro.dto.attendance.CreateAttendanceDto;
 
 import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
 import com.backend.empowerpro.dto.employee.EmployeeDto;
+import com.backend.empowerpro.entity.PayRoll;
 import com.backend.empowerpro.service.EmployeeService;
+import com.backend.empowerpro.service.PayrollService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
@@ -44,6 +47,7 @@ public class EmployeeController {
     private final AttendanceService attendanceService;
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
+    private final PayrollService payrollService;
 
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
 
@@ -73,6 +77,7 @@ public class EmployeeController {
         employeeService.deleteEmployee(id);
         return ResponseEntity.ok("Employee deleted successfully.");
     }
+
 
     @PostMapping("/complaint-creation")
     public ResponseEntity<ComplaintDto> createComplaint(
@@ -110,7 +115,6 @@ public class EmployeeController {
     public ResponseEntity<String> deleteComplaint(@PathVariable Long id) {
         return ResponseEntity.ok(complaintService.deleteComplaint(id));
     }
-
 
 
     @GetMapping("/complaint/{userId}")
@@ -155,6 +159,14 @@ public class EmployeeController {
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         return ResponseEntity.ok(leaveService.getTodayLeaves());
     }
+
+    @PreAuthorize("hasAuthority('Employee')")
+    @GetMapping("/get-slip/{id}")
+    public ResponseEntity<PayRoll> getOnePayRoll(@PathVariable Long id){
+        return ResponseEntity.ok(payrollService.getOnePayRoll(id));
+    }
+
+
 
 
     @PostMapping("/createAttendance")

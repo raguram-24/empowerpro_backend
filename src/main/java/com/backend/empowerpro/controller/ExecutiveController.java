@@ -5,10 +5,14 @@ import com.backend.empowerpro.dto.employee.EmployeeDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
+
 import com.backend.empowerpro.entity.PerformanceEvaluation;
 import com.backend.empowerpro.entity.Remark;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.LeaveService;
+import com.backend.empowerpro.dto.payroll.PayRollViewDto;
+import com.backend.empowerpro.entity.PayRoll;
+import com.backend.empowerpro.service.*;
 import com.backend.empowerpro.utils.ReplyRequest;
 
 import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationCreationDto;
@@ -16,6 +20,7 @@ import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationDto
 import com.backend.empowerpro.dto.remark.RemarkCreationDto;
 import com.backend.empowerpro.dto.remark.RemarkDto;
 import com.backend.empowerpro.service.RemarkService;
+import com.backend.empowerpro.utils.PerformanceEvaluationMapper;
 import com.backend.empowerpro.utils.RemarkMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -26,7 +31,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,7 +45,7 @@ public class ExecutiveController {
 
     private final RemarkService remarkService;
     private final RemarkMapper remarkMapper;
-
+    private final PayrollService payrollService;
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
 
@@ -150,6 +154,19 @@ public class ExecutiveController {
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
         return ResponseEntity.ok(todayLeaves);
+    }
+
+
+
+
+    @GetMapping("/slip-all")
+    public ResponseEntity<List<PayRollViewDto>> getallslip(){
+        return ResponseEntity.ok(payrollService.getAllPayRoll());
+    }
+
+    @PutMapping("/slip-permission/{id}")
+    public ResponseEntity<PayRoll> changeStatus(@PathVariable Long id){
+        return ResponseEntity.ok(payrollService.updateStatus(id));
     }
 
 

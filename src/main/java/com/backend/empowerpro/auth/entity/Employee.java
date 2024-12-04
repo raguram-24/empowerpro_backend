@@ -51,6 +51,7 @@ public class Employee implements UserDetails {
     @NotBlank(message = "workTitle Cannot be Empty")
     private String workTitle;
 
+
     @Enumerated(EnumType.STRING)
     private EmployeeRole role;
 

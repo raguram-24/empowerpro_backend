@@ -31,6 +31,7 @@ public class RegisterRequest {
     private Long phoneNumber;
     @NotBlank(message = "workTitle should not be Empty")
     private String workTitle;
+
     private EmployeeRole role;
     @NotBlank(message = "username should not be Empty")
     private String username;

@@ -17,6 +17,7 @@ public class EmployeeUpdateRequest{
     private Long phoneNumber;
     private EmployeeRole role;
     private String workTitle;
+
     private String userName;
     private String password;
     private String summary;

@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/api/v1/admin/**").permitAll();
                     auth.requestMatchers("/api/v1/review/**").permitAll();
                     auth.requestMatchers("/api/v1/hr/**").permitAll();
-                    auth.requestMatchers("/api/v1/employee/**").permitAll();
+                    auth.requestMatchers("/api/v1/employees/**").permitAll();
                     auth.requestMatchers("/api/v1/executive/**").permitAll();
                     auth.requestMatchers("/api/v1/team-lead/**").permitAll();
                     auth.requestMatchers("/api/v1/finance/**").permitAll();
