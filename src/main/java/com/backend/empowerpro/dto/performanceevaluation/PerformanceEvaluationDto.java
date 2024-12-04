@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PerformanceEvaluationDto {
     private Long id;
-    private Long actorId;  // ID of the employee being evaluated
+    private Long actor;  // ID of the employee being evaluated
     private String finalFeedback;
     private LocalDate createdAt;
     private List<RemarkDto> remarks;  // List of associated remarks

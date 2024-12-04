@@ -1,5 +1,10 @@
 package com.backend.empowerpro.controller;
 
+
+import com.backend.empowerpro.auth.utils.EmployeeUpdateRequest;
+import com.backend.empowerpro.dto.attendance.CheckoutAttendanceDto;
+import com.backend.empowerpro.dto.attendance.CreateAttendanceDto;
+
 import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
 import com.backend.empowerpro.dto.employee.EmployeeDto;
 import com.backend.empowerpro.entity.PayRoll;
@@ -9,11 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
+import com.backend.empowerpro.entity.Attendance;
+import com.backend.empowerpro.service.AttendanceService;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.LeaveService;
 import org.springframework.core.io.Resource;
@@ -36,13 +44,13 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final AttendanceService attendanceService;
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
     private final PayrollService payrollService;
 
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
 
-    // ==================== Employee CRUD ====================
 
 
 
@@ -67,7 +75,6 @@ public class EmployeeController {
         return ResponseEntity.ok("Employee deleted successfully.");
     }
 
-    // ==================== Complaint Management ====================
 
     @PostMapping("/complaint-creation")
     public ResponseEntity<ComplaintDto> createComplaint(
@@ -106,6 +113,16 @@ public class EmployeeController {
         return ResponseEntity.ok(complaintService.deleteComplaint(id));
     }
 
+
+    @GetMapping("/complaint/{userId}")
+    public ResponseEntity<List<ComplaintDto>> getAllComplaintsByEmployeeId(@PathVariable Long userId) {
+        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToUser(userId);
+        if (complaints.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(complaints);
+    }
+
     @GetMapping("/complaint-file")
     public ResponseEntity<Resource> getComplaintFile(@RequestParam String filePath) throws IOException {
         File file = new File(filePath);
@@ -120,7 +137,7 @@ public class EmployeeController {
                 .body(resource);
     }
 
-    // ==================== Leave Management ====================
+
 
     @PostMapping("/leave-creation")
     public ResponseEntity<String> applyLeave(@RequestBody LeaveCreationDto leaveCreationDto) {
@@ -134,18 +151,43 @@ public class EmployeeController {
         return ResponseEntity.ok(leaves);
     }
 
-    @GetMapping("/available-leaves/{userId}")
-    public ResponseEntity<Integer> getAvailableLeaves(@PathVariable Long userId) {
-        return ResponseEntity.ok(leaveService.getAvailableLeaves(userId));
-    }
 
     @GetMapping("/leave-today")
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         return ResponseEntity.ok(leaveService.getTodayLeaves());
     }
+
     @PreAuthorize("hasAuthority('Employee')")
     @GetMapping("/get-slip/{id}")
     public ResponseEntity<PayRoll> getOnePayRoll(@PathVariable Long id){
         return ResponseEntity.ok(payrollService.getOnePayRoll(id));
     }
+
+
+
+
+    @PostMapping("/createAttendance")
+    public ResponseEntity<Attendance> createAttendance(
+            @RequestBody CreateAttendanceDto createAttendanceDto
+    ){
+      Attendance attendance =   attendanceService.createAttendance(createAttendanceDto);
+      return ResponseEntity.ok(attendance);
+    }
+
+    @PostMapping("/checkoutAttendance/{id}")
+    public ResponseEntity<Attendance> checkoutAttendance(
+            @RequestBody CheckoutAttendanceDto checkoutAttendanceDto,
+            @PathVariable("id") Long id
+    ){
+
+        Attendance attendance = attendanceService.checkoutUpdateAttendance(checkoutAttendanceDto,id);
+        return ResponseEntity.ok(attendance);
+    }
+
+    @GetMapping("/getAllAttendance")
+    public ResponseEntity<List<Attendance>> getAllAttendance() {
+        List<Attendance> attendance = attendanceService.getAllAttendance();
+        return ResponseEntity.ok(attendance);
+    }
+
 }

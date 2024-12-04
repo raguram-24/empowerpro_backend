@@ -1,5 +1,7 @@
 package com.backend.empowerpro.service;
 
+import com.backend.empowerpro.dto.employee.EmployeeDto;
+import com.backend.empowerpro.dto.remark.RemarkDto;
 import com.backend.empowerpro.entity.Remark;
 import java.util.List;
 
@@ -11,7 +13,7 @@ public interface RemarkService {
      * @param reviewedActorId ID of the actor being reviewed.
      * @return List of remarks for the reviewed actor.
      */
-    List<Remark> getRemarksByReviewedActor(Long reviewedActorId);
+    List<Remark> getRemarksByReviewerActor(Long reviewedActorId);
 
     /**
      * Adds a remark for a reviewed actor by a reviewer.
@@ -26,8 +28,12 @@ public interface RemarkService {
     /**
      * Retrieves all remarks given by a specific reviewer.
      *
-     * @param reviewerActorId ID of the reviewer actor.
+     * param ID of the reviewer actor.
      * @return List of remarks given by the reviewer.
      */
-    List<Remark> getRemarksByReviewer(Long reviewerActorId);
+//    List<Remark> getRemarksByReviewer(Long reviewerActorId);
+
+    List<EmployeeDto> getAllEmployees();
+
+    List<Remark> getAllEvaluations();
 }

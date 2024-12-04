@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeDto {
-    private Long employeeId;
+    private Long id;
     private String firstName;
     private String lastName;
     private String address;
