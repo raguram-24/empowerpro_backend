@@ -44,10 +44,7 @@ public class EmployeeController {
 
     // ==================== Employee CRUD ====================
 
-    @GetMapping
-    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
-        return ResponseEntity.ok(employeeService.getAllEmployees());
-    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {

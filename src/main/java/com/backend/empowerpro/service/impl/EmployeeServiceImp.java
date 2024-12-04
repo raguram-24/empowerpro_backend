@@ -8,6 +8,8 @@ import com.backend.empowerpro.exception.EmployeeNotFoundException;
 import com.backend.empowerpro.service.EmployeeService;
 import com.backend.empowerpro.utils.EmployeeMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,13 +20,17 @@ public class EmployeeServiceImp implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImp.class);
 
     @Override
-    public List<EmployeeDto> getAllEmployees() {
-        return employeeRepository.findAll()
-                .stream()
-                .map(employeeMapper::toEmployeeDto)
-                .toList();
+    public List<Employee> getAllEmployees() {
+       try{
+           List<Employee> result  = employeeRepository.findAll();
+           return result;
+       }catch (Exception e){
+           logger.error("Error Has been Occurred {}",e.getMessage());
+           throw new RuntimeException("An unexpected error occurred while Creating Bankdetails", e);
+       }
     }
 
     @Override

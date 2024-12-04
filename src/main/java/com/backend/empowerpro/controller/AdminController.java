@@ -1,5 +1,6 @@
 package com.backend.empowerpro.controller;
 
+import com.backend.empowerpro.auth.entity.Employee;
 import com.backend.empowerpro.auth.service.AuthService;
 import com.backend.empowerpro.auth.utils.AuthResponse;
 import com.backend.empowerpro.auth.utils.EmployeeResponse;
@@ -17,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -47,5 +50,10 @@ public class AdminController {
     @GetMapping("/open")
     public ResponseEntity<String> sayHello(){
         return ResponseEntity.ok("hello");
+    }
+
+    @GetMapping("/get-employees")
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 }
