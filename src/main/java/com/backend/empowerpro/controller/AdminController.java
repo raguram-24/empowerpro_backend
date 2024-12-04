@@ -28,13 +28,9 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @PostMapping("/register")
-<<<<<<< HEAD
-//    @PreAuthorize("hasAuthority('Admin')")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
-=======
-    @PreAuthorize("hasAuthority('Admin')")
+
+
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest registerRequest) {
->>>>>>> main
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
@@ -43,14 +39,12 @@ public class AdminController {
         return objectMapper.readValue(registerRequest, RegisterRequest.class);
     }
 
+
     @GetMapping("/{id}")
 //    @PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<EmployeeDto> getOneEmployeeHandler(@PathVariable Long id) {
         return new ResponseEntity<>(employeeService.getEmployeeById(id), HttpStatus.FOUND);
     }
 
-    @GetMapping("/open")
-    public ResponseEntity<String> sayHello(){
-        return ResponseEntity.ok("hello");
-    }
+
 }

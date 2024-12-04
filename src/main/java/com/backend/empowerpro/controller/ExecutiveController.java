@@ -1,9 +1,15 @@
 package com.backend.empowerpro.controller;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
+import com.backend.empowerpro.dto.employee.EmployeeDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
+
+import com.backend.empowerpro.entity.PerformanceEvaluation;
+import com.backend.empowerpro.entity.Remark;
+import com.backend.empowerpro.service.ComplaintService;
+import com.backend.empowerpro.service.LeaveService;
 import com.backend.empowerpro.dto.payroll.PayRollViewDto;
 import com.backend.empowerpro.entity.PayRoll;
 import com.backend.empowerpro.service.*;
@@ -13,6 +19,7 @@ import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationCre
 import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationDto;
 import com.backend.empowerpro.dto.remark.RemarkCreationDto;
 import com.backend.empowerpro.dto.remark.RemarkDto;
+import com.backend.empowerpro.service.RemarkService;
 import com.backend.empowerpro.utils.PerformanceEvaluationMapper;
 import com.backend.empowerpro.utils.RemarkMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +31,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,9 +43,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExecutiveController {
 
-    private final PerformanceEvaluationService performanceEvaluationService;
     private final RemarkService remarkService;
-    private final PerformanceEvaluationMapper performanceEvaluationMapper;
     private final RemarkMapper remarkMapper;
     private final PayrollService payrollService;
     private final LeaveService leaveService;
@@ -88,12 +92,6 @@ public class ExecutiveController {
     @DeleteMapping ("/complaint-delete/{id}")
     public ResponseEntity<String> deleteComplaint(@PathVariable Long id) {
         return ResponseEntity.ok(complaintService.deleteComplaint(id));
-    }
-
-    @GetMapping("/assigned-to-hr")
-    public ResponseEntity<List<ComplaintDto>> getComplaintsAssignedToHR() {
-        List<ComplaintDto> complaints = complaintService.getComplaintsAssignedToHR();
-        return ResponseEntity.ok(complaints);
     }
 
     @GetMapping("/complaint/{userId}")
@@ -152,12 +150,6 @@ public class ExecutiveController {
         return ResponseEntity.ok(leaves);
     }
 
-    @GetMapping("/available-leaves/{userId}")
-    public ResponseEntity<Integer> getAllLeavesByUser(@PathVariable Long userId) {
-        int availableLeaves = leaveService.getAvailableLeaves(userId);
-        return ResponseEntity.ok(availableLeaves); // Wrap the integer in ResponseEntity with HTTP 200 status
-    }
-
     @GetMapping("/leave-today")
     public ResponseEntity<List<TodayLeaveDto>> getTodayLeaves() {
         List<TodayLeaveDto> todayLeaves = leaveService.getTodayLeaves();
@@ -165,13 +157,6 @@ public class ExecutiveController {
     }
 
 
-    @GetMapping("/leave-get-filtered")
-    public ResponseEntity<List<LeaveDto>> getAllLeaves(
-            @RequestParam(required = false) String timePeriod,
-            @RequestParam(required = false) String status) {
-        List<LeaveDto> leaves = leaveService.getLeavesByFilter(timePeriod, status);
-        return ResponseEntity.ok(leaves);
-    }
 
 
     @GetMapping("/slip-all")
@@ -184,24 +169,25 @@ public class ExecutiveController {
         return ResponseEntity.ok(payrollService.updateStatus(id));
     }
 
+
     /**
      * Enable or disable performance evaluation functionality.
      */
-    @PatchMapping("/toggle-performance-evaluation")
-    public ResponseEntity<String> togglePerformanceEvaluation(@RequestParam boolean enable) {
-        performanceEvaluationService.togglePerformanceEvaluation(enable);
-        String status = enable ? "enabled" : "disabled";
-        return ResponseEntity.ok("Performance evaluation has been " + status + ".");
-    }
+//    @PatchMapping("/toggle-performance-evaluation")
+//    public ResponseEntity<String> togglePerformanceEvaluation(@RequestParam boolean enable) {
+//        performanceEvaluationService.togglePerformanceEvaluation(enable);
+//        String status = enable ? "enabled" : "disabled";
+//        return ResponseEntity.ok("Performance evaluation has been " + status + ".");
+//    }
 
     /**
      * Get all performance evaluations.
      */
     @GetMapping("/performance-evaluations")
-    public ResponseEntity<List<PerformanceEvaluationDto>> getAllPerformanceEvaluations() {
-        List<PerformanceEvaluationDto> evaluations = performanceEvaluationService.getAllEvaluations()
+    public ResponseEntity<List<RemarkDto>> getAllPerformanceEvaluations() {
+        List<RemarkDto> evaluations = remarkService.getAllEvaluations()
                 .stream()
-                .map(performanceEvaluationMapper::toPerformanceEvaluationDto)
+                .map(Remark::toRemarkDto)
                 .toList();
         return ResponseEntity.ok(evaluations);
     }
@@ -209,14 +195,14 @@ public class ExecutiveController {
     /**
      * Add or update a performance evaluation for an actor.
      */
-    @PostMapping("/add-performance-evaluation")
-    public ResponseEntity<PerformanceEvaluationDto> addOrUpdatePerformanceEvaluation(
-            @RequestBody PerformanceEvaluationCreationDto evaluationDto) {
-        PerformanceEvaluationDto updatedEvaluation = performanceEvaluationMapper.toPerformanceEvaluationDto(
-                performanceEvaluationService.addOrUpdateEvaluation(
-                        evaluationDto.getActorId(), evaluationDto.getEvaluationContent()));
-        return ResponseEntity.ok(updatedEvaluation);
-    }
+//    @PostMapping("/add-performance-evaluation")
+//    public ResponseEntity<PerformanceEvaluationDto> addOrUpdatePerformanceEvaluation(
+//            @RequestBody PerformanceEvaluationCreationDto evaluationDto) {
+//        PerformanceEvaluationDto updatedEvaluation = performanceEvaluationMapper.toPerformanceEvaluationDto(
+//                performanceEvaluationService.addOrUpdateEvaluation(
+//                        evaluationDto.getActorId(), evaluationDto.getEvaluationContent()));
+//        return ResponseEntity.ok(updatedEvaluation);
+//    }
 
     /**
      * Add a remark for another actor.
@@ -234,13 +220,24 @@ public class ExecutiveController {
     /**
      * Get all remarks for a specific reviewed actor.
      */
-    @GetMapping("/{reviewedActorId}/remarks")
-    public ResponseEntity<List<RemarkDto>> getRemarksByReviewedActor(@PathVariable Long reviewedActorId) {
-        List<RemarkDto> remarks = remarkService.getRemarksByReviewedActor(reviewedActorId)
-                .stream()
-                .map(remarkMapper::toRemarkDto)
-                .toList();
+    @GetMapping("/remarks/{reviewerActorId}")
+    public ResponseEntity<List<Remark>> getRemarksByReviewedActor(@PathVariable Long reviewerActorId) {
+        List<Remark> remarks = remarkService.getRemarksByReviewerActor(reviewerActorId);
+
         return ResponseEntity.ok(remarks);
     }
+
+    @GetMapping("/getAllEmployees")
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
+        List<EmployeeDto> allEmployees = remarkService.getAllEmployees();
+        return ResponseEntity.ok(allEmployees);
+    }
+
+//    @GetMapping("/remarks/{reviewerActorId}")
+//    public ResponseEntity<List<Remark>> getRemarksByReviewerActor(@PathVariable Long reviewerActorId) {
+//        List<Remark> remarks = remarkService.getRemarksByReviewerActor(reviewerActorId);
+//
+//        return ResponseEntity.ok(remarks);
+//    }
 
 }

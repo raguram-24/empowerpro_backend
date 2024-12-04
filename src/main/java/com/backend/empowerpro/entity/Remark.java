@@ -1,6 +1,8 @@
 package com.backend.empowerpro.entity;
 import com.backend.empowerpro.auth.entity.Employee;
 
+import com.backend.empowerpro.dto.performanceevaluation.PerformanceEvaluationDto;
+import com.backend.empowerpro.dto.remark.RemarkDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -34,5 +36,16 @@ public class Remark {
     @CreationTimestamp
     @Column(name = "date", nullable = false, updatable = false)
     private LocalDate date;
+
+    public static RemarkDto toRemarkDto(Remark remark) {
+        RemarkDto dto = new RemarkDto();
+        dto.setId(remark.getId());
+        dto.setReviewedActorId(remark.getReviewedActor().getId());
+        dto.setReviewerActorId(remark.getReviewerActor().getId());
+        dto.setContent(remark.getContent());
+        dto.setDate(remark.getDate());
+        // Map remarks here as well if needed
+        return dto;
+    }
 }
 

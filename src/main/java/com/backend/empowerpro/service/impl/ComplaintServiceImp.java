@@ -121,11 +121,6 @@ public class ComplaintServiceImp implements ComplaintService {
         }
     }
 
-    @Override
-    public List<ComplaintDto> getComplaintsAssignedToHR() {
-        return List.of();
-    }
-
 
     @Override
     public List<ComplaintDto> getComplaintsAssignedToUser(Long userId) {
