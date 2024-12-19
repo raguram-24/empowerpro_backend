@@ -50,7 +50,7 @@ public class PayrollServiceImp implements PayrollService {
                 logger.info(String.valueOf(fetchedEmployee));
                 Tax tax = taxRepo.findLatestById();
                 logger.info(String.valueOf(tax));
-                BankDetails bankDetails = bankRepo.findByEmployee(fetchedEmployee);
+                BankDetails bankDetails = bankRepo.findByEmployeeId(fetchedEmployee.getId());
                 logger.info(String.valueOf(bankDetails));
                 if(Objects.equals(fetchedEmployee.getRole().toString(), "HR")){
                     salary = 350;

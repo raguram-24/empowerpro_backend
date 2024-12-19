@@ -55,7 +55,7 @@ public class HrController {
     private final LeaveService leaveService;
     private final ComplaintRepo complaintRepo;
     private final MedicalClaimService medicalClaimService;
-    private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
+    private final String UPLOAD_DIR_COMPLAINTS = "D:\\3rd year\\New folder\\empowerpro_backend\\uploads\\complaints";
     @Value("${project.events}")
     private String EVENTS_DIR;
     @Value("${project.claims}")

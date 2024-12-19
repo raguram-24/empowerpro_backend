@@ -246,7 +246,7 @@ public class FinanceController {
 
     }
 
-    @PreAuthorize("hasAuthority('Finance')")
+//    @PreAuthorize("hasAuthority('Finance')")
     @PostMapping("/tax-creation")
     public ResponseEntity<Tax> createTax(@RequestBody TaxCreationDto taxCreationDto){
         return ResponseEntity.ok(taxService.createTax(taxCreationDto));
@@ -261,7 +261,7 @@ public class FinanceController {
         return ResponseEntity.ok(taxService.getOneTax(id));
     }
 
-    @PreAuthorize("hasAuthority('Finance')")
+//    @PreAuthorize("hasAuthority('Finance')")
     @PostMapping("/slip")
     public ResponseEntity<PayRoll> createSlip(@RequestBody PayRollReq payRollReq){
         return ResponseEntity.ok(payrollService.getPayroll(payRollReq));

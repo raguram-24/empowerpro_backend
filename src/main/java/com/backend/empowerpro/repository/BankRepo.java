@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BankRepo extends JpaRepository<BankDetails,Long> {
-    BankDetails findByEmployee(Employee employee);
+    BankDetails findByEmployeeId(Long id);
 }

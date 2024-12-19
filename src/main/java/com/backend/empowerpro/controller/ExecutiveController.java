@@ -1,4 +1,5 @@
 package com.backend.empowerpro.controller;
+import com.backend.empowerpro.dto.Project.ProjectCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.employee.EmployeeDto;
@@ -7,6 +8,7 @@ import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
 
 import com.backend.empowerpro.entity.PerformanceEvaluation;
+import com.backend.empowerpro.entity.Project;
 import com.backend.empowerpro.entity.Remark;
 import com.backend.empowerpro.service.ComplaintService;
 import com.backend.empowerpro.service.LeaveService;
@@ -48,6 +50,7 @@ public class ExecutiveController {
     private final PayrollService payrollService;
     private final LeaveService leaveService;
     private final ComplaintService complaintService;
+    private final ProjectService projectService;
 
     private final String UPLOAD_DIR_COMPLAINTS = "C:\\Users\\Insaf\\Desktop\\LatestEmpowerpro\\empowerpro_backend\\uploads\\complaints\\";
 
@@ -239,5 +242,42 @@ public class ExecutiveController {
 //
 //        return ResponseEntity.ok(remarks);
 //    }
+//    ------------------------------------------------Project---------------------------------------------------------
+@PostMapping("/createProject")
+public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDto projectCreationDto) {
+    Project project = projectService.createProject(projectCreationDto);
+    return ResponseEntity.ok(project);
+}
+
+    @GetMapping("/getProjectById/{id}")
+    public ResponseEntity<Project> getProjectById(@PathVariable("id")Long projectId){
+        Project projects =projectService.getProjectById(projectId);
+        return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/getAllProject")
+    public ResponseEntity<List<Project>> getAllProject(){
+        List<Project> projects =projectService.getAllProject();
+        return ResponseEntity.ok(projects);
+    }
+    @GetMapping("/getProjectByUserId/{id}")
+    public ResponseEntity<List<Project>> getProjectByUserId(@PathVariable("id")Long userId){
+        List<Project> projects =projectService.getProjectByUserId(userId);
+        return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/searchProjectByName/{keyword}")
+    public ResponseEntity<List<Project>> searchProjectByName(@PathVariable("keyword")String keyword){
+        List<Project> projects =projectService.searchProjectByName(keyword);
+        return ResponseEntity.ok(projects);
+    }
+
+    @DeleteMapping("/deleteProject/{id}")
+    public ResponseEntity<String> deleteBlogComment(@PathVariable("id")Long projectId){
+        projectService.deleteProject(projectId);
+        return  ResponseEntity.ok("Project deleted successfully!.");
+    }
+
+
 
 }
