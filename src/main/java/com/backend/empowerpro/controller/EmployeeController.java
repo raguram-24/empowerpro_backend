@@ -166,28 +166,28 @@ public class EmployeeController {
 
 
 
-    @PostMapping("/createAttendance")
-    public ResponseEntity<Attendance> createAttendance(
-            @RequestBody CreateAttendanceDto createAttendanceDto
-    ){
-      Attendance attendance =   attendanceService.createAttendance(createAttendanceDto);
-      return ResponseEntity.ok(attendance);
-    }
+//    @PostMapping("/createAttendance")
+//    public ResponseEntity<Attendance> createAttendance(
+//            @RequestBody CreateAttendanceDto createAttendanceDto
+//    ){
+//      Attendance attendance =   attendanceService.createAttendance(createAttendanceDto);
+//      return ResponseEntity.ok(attendance);
+//    }
 
-    @PostMapping("/checkoutAttendance/{id}")
-    public ResponseEntity<Attendance> checkoutAttendance(
-            @RequestBody CheckoutAttendanceDto checkoutAttendanceDto,
-            @PathVariable("id") Long id
-    ){
+//    @PostMapping("/checkoutAttendance/{id}")
+//    public ResponseEntity<Attendance> checkoutAttendance(
+//            @RequestBody CheckoutAttendanceDto checkoutAttendanceDto,
+//            @PathVariable("id") Long id
+//    ){
+//
+//        Attendance attendance = attendanceService.checkoutUpdateAttendance(checkoutAttendanceDto,id);
+//        return ResponseEntity.ok(attendance);
+//    }
 
-        Attendance attendance = attendanceService.checkoutUpdateAttendance(checkoutAttendanceDto,id);
-        return ResponseEntity.ok(attendance);
-    }
-
-    @GetMapping("/getAllAttendance")
-    public ResponseEntity<List<Attendance>> getAllAttendance() {
-        List<Attendance> attendance = attendanceService.getAllAttendance();
-        return ResponseEntity.ok(attendance);
-    }
+//    @GetMapping("/getAllAttendance")
+//    public ResponseEntity<List<Attendance>> getAllAttendance() {
+//        List<Attendance> attendance = attendanceService.getAllAttendance();
+//        return ResponseEntity.ok(attendance);
+//    }
 
 }

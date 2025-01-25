@@ -1,10 +1,10 @@
 package com.backend.empowerpro.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "attendance")
-public class Attendance {
+public class    Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "attendance_id" ,nullable = false   )
@@ -32,12 +32,12 @@ public class Attendance {
     private Time checkOut;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
 
     @ElementCollection
     @CollectionTable(name ="break_time",joinColumns = @JoinColumn(name = "attendance_id"))
     @Column(name = "break_time"   )
-    private ArrayList<Time> break_time;
+    private List<Time> break_time;
 
 
 
