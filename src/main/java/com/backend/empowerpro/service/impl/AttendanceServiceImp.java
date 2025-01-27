@@ -83,11 +83,11 @@ public class AttendanceServiceImp implements AttendanceService {
     public Attendance getAttendanceById(Long id) {
         return attendanceRepo.findAttendanceById(id);
     }
-
-    @Override
-    public List<Attendance> getAttendanceByDateRange(SearchDateRangeDto searchDateRangeDto) {
-        return null;
-    }
+//
+//    @Override
+//    public List<Attendance> getAttendanceByDateRange(SearchDateRangeDto searchDateRangeDto) {
+//        return null;
+//    }
 
     @Override
     public List<Attendance> getAttendanceByDate(Long UserId, LocalDate date) {

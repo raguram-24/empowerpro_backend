@@ -233,14 +233,14 @@ public class TeamLeadController {
         return ResponseEntity.ok(attendance);
     }
 
-    @PostMapping("/getAttendanceDateRange")
-    public ResponseEntity<List<Attendance>> getAttendanceDateRange(
-            @RequestBody SearchDateRangeDto searchDateRangeDto
-    ) {
-        System.out.println("hi");
-        List<Attendance> attendances = attendanceService.getAttendanceByDateRange(searchDateRangeDto);
-        return ResponseEntity.ok(attendances);
-    }
+//    @PostMapping("/getAttendanceDateRange")
+//    public ResponseEntity<List<Attendance>> getAttendanceDateRange(
+//            @RequestBody SearchDateRangeDto searchDateRangeDto
+//    ) {
+//        System.out.println("hi");
+//        List<Attendance> attendances = attendanceService.getAttendanceByDateRange(searchDateRangeDto);
+//        return ResponseEntity.ok(attendances);
+//    }
 
     @GetMapping("/getAttendanceByDate/{userId}/{date}")
 //    @PreAuthorize("hasAuthority('Teamlead')")

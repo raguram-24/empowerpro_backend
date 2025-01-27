@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PayrollServiceImp implements PayrollService {
+public  class  PayrollServiceImp implements PayrollService {
     private final PayrollRepo payrollRepo;
     private final EmployeeRepository employeeRepository;
     private final BankRepo bankRepo;
