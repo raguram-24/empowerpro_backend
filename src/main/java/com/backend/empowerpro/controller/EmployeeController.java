@@ -1,6 +1,7 @@
 package com.backend.empowerpro.controller;
 
 
+import com.backend.empowerpro.auth.entity.Employee;
 import com.backend.empowerpro.auth.utils.EmployeeUpdateRequest;
 import com.backend.empowerpro.dto.attendance.CheckoutAttendanceDto;
 import com.backend.empowerpro.dto.attendance.CreateAttendanceDto;
@@ -58,6 +59,14 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
+
+    @GetMapping("/role/{role}")
+    public ResponseEntity<List<Employee>> getAllEmployee(@PathVariable String role) {
+        System.out.println("checking role " + role);
+        return ResponseEntity.ok(employeeService.getAllEmployees(role));
+    }
+
+
 
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeCreationDto employeeCreationDto) {
