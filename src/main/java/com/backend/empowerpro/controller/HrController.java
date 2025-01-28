@@ -236,10 +236,10 @@ public class HrController {
         return ResponseEntity.ok(eventService.getOneEvent(eventId));
     }
 
-    @PreAuthorize("hasAuthority('HR')")
+//    @PreAuthorize("hasAuthority('HR')")
     @GetMapping("/allmedicalClaims")
     public ResponseEntity<List<MedicalClaim>> getAllClaim(){return ResponseEntity.ok(medicalClaimService.getAllClaim());}
-    @PreAuthorize("hasAuthority('HR')")
+//    @PreAuthorize("hasAuthority('HR')")
     @GetMapping("/medicalclaim/{medicalclaimId}")
     public ResponseEntity<MedicalClaim> getMedicalClaim(@PathVariable Long medicalclaimId){
         return ResponseEntity.ok(medicalClaimService.getOneClaim(medicalclaimId));
