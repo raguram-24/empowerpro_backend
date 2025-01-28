@@ -278,6 +278,10 @@ public ResponseEntity<Project> createProject(@RequestBody ProjectCreationDto pro
         return  ResponseEntity.ok("Project deleted successfully!.");
     }
 
-
+    @GetMapping("/getProjectByTeamLeadId/{id}")
+    public ResponseEntity<List<Project>> getProjectByTeamLeadId(@PathVariable("id")Long teamLeadId){
+        List<Project> projects =projectService.getProjectByTeamLeader(teamLeadId);
+        return ResponseEntity.ok(projects);
+    }
 
 }

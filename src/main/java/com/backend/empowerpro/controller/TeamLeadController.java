@@ -4,8 +4,11 @@ import com.backend.empowerpro.auth.service.AuthService;
 import com.backend.empowerpro.dto.Blog.BlogCommentDto;
 import com.backend.empowerpro.dto.Blog.BlogCreationDto;
 import com.backend.empowerpro.dto.MarkCalendar.MarkCalendarDto;
+import com.backend.empowerpro.dto.Project.ProjectCreationDto;
+import com.backend.empowerpro.dto.Project.ProjectTaskCreationDto;
 import com.backend.empowerpro.dto.attendance.SearchDateRangeDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
+import com.backend.empowerpro.dto.employee.EmployeeDto;
 import com.backend.empowerpro.entity.*;
 import com.backend.empowerpro.service.*;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -28,6 +33,7 @@ public class TeamLeadController {
     private final BlogRatingService blogRatingService;
     private  final AttendanceService attendanceService;
     private  final  EmployeeService employeeService;
+    private  final ProjectTaskService projectTaskService;
 
 
 //    -------------------------calendar marker------------------------------------------------
@@ -190,46 +196,46 @@ public class TeamLeadController {
     }
 
     //    ------------------------------------------------------Attendance------------------------------------------------
-//    @GetMapping("/createAttendance/{userId}")
-////    @PreAuthorize("hasAuthority('Teamlead')")
-//    public ResponseEntity<Attendance> createAttendance(@PathVariable("userId") Long userId){
-//        Attendance attendance = attendanceService.createAttendance(userId);
-//        return ResponseEntity.ok(attendance);
-//    }
+    @GetMapping("/createAttendance/{userId}")
+//    @PreAuthorize("hasAuthority('Teamlead')")
+    public ResponseEntity<Attendance> createAttendance(@PathVariable("userId") Long userId){
+        Attendance attendance = attendanceService.createAttendance(userId);
+        return ResponseEntity.ok(attendance);
+    }
 
-//    @GetMapping("/addBreakTime/{id}")
-////    @PreAuthorize("hasAuthority('Teamlead')")
-//    public ResponseEntity<String> addBreakTime(@PathVariable("id") Long id){
-//        String attendance = attendanceService.updateBreakTime(id);
-//        return ResponseEntity.ok(attendance);
-//    }
+    @GetMapping("/addBreakTime/{id}")
+//    @PreAuthorize("hasAuthority('Teamlead')")
+    public ResponseEntity<String> addBreakTime(@PathVariable("id") Long id){
+        String attendance = attendanceService.updateBreakTime(id);
+        return ResponseEntity.ok(attendance);
+    }
 
-//    @GetMapping("/addContinueTime/{id}")
-////    @PreAuthorize("hasAuthority('Teamlead')")
-//    public ResponseEntity<String> addContinueTime(@PathVariable("id") Long id){
-//        String attendance = attendanceService.addContinueTime(id);
-//        return ResponseEntity.ok(attendance);
-//    }
+    @GetMapping("/addContinueTime/{id}")
+//    @PreAuthorize("hasAuthority('Teamlead')")
+    public ResponseEntity<String> addContinueTime(@PathVariable("id") Long id){
+        String attendance = attendanceService.addContinueTime(id);
+        return ResponseEntity.ok(attendance);
+    }
 
-//    @GetMapping("/updateCheckout/{id}")
-////    @PreAuthorize("hasAuthority('Teamlead')")
-//    public ResponseEntity<String> updateCheckOut(@PathVariable("id") Long id){
-//        String attendance = attendanceService.updateCheckout(id);
-//        return ResponseEntity.ok(attendance);
-//    }
+    @GetMapping("/updateCheckout/{id}")
+//    @PreAuthorize("hasAuthority('Teamlead')")
+    public ResponseEntity<String> updateCheckOut(@PathVariable("id") Long id){
+        String attendance = attendanceService.updateCheckout(id);
+        return ResponseEntity.ok(attendance);
+    }
 
-//    @GetMapping("/getAllAttendanceByUserId/{userId}")
-////    @PreAuthorize("hasAuthority('Teamlead')")
-//    public ResponseEntity<List<Attendance>> getAllAttendanceByUserId(@PathVariable("userId") Long userId){
-//        List<Attendance> attendance = attendanceService.getAllAttendanceByUserId(userId);
-//        return ResponseEntity.ok(attendance);
-//    }
+    @GetMapping("/getAllAttendanceByUserId/{userId}")
+//    @PreAuthorize("hasAuthority('Teamlead')")
+    public ResponseEntity<List<Attendance>> getAllAttendanceByUserId(@PathVariable("userId") Long userId){
+        List<Attendance> attendance = attendanceService.getAllAttendanceByUserId(userId);
+        return ResponseEntity.ok(attendance);
+    }
 //
-//    @GetMapping("getAttendanceById/{id}")
-//    public  ResponseEntity<Attendance> getAttendanceById(@PathVariable("id") Long id){
-//        Attendance attendance = attendanceService.getAttendanceById(id);
-//        return ResponseEntity.ok(attendance);
-//    }
+    @GetMapping("/getAttendanceById/{id}")
+    public  ResponseEntity<Attendance> getAttendanceById(@PathVariable("id") Long id){
+        Attendance attendance = attendanceService.getAttendanceById(id);
+        return ResponseEntity.ok(attendance);
+    }
 
 //    @PostMapping("/getAttendanceDateRange")
 //    public ResponseEntity<List<Attendance>> getAttendanceDateRange(
@@ -239,4 +245,26 @@ public class TeamLeadController {
 //        List<Attendance> attendances = attendanceService.getAttendanceByDateRange(searchDateRangeDto);
 //        return ResponseEntity.ok(attendances);
 //    }
+
+    @GetMapping("/getAttendanceByDate/{userId}/{date}")
+//    @PreAuthorize("hasAuthority('Teamlead')")
+    public ResponseEntity<List<Attendance>> getAttendanceByDate(@PathVariable("userId") Long userId,@PathVariable("date") String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate parsedDate = LocalDate.parse(date, formatter);
+        List<Attendance> attendance = attendanceService.getAttendanceByDate(userId,parsedDate);
+        return ResponseEntity.ok(attendance);
+    }
+
+//    ---------------------------------------------project Task--------------------------------
+@PostMapping("/createProjectTask")
+    public ResponseEntity<ProjectTask> createProjectTask(@RequestBody ProjectTaskCreationDto projectTaskCreationDto) {
+        ProjectTask projectTask = projectTaskService.createProjectTask(projectTaskCreationDto);
+        return ResponseEntity.ok(projectTask);
+    }
+    @GetMapping("/getEmployeeByProjectId/{id}")
+    public  ResponseEntity<List<EmployeeDto>> getEmployeeByProjectId(@PathVariable("id") Long id){
+        List<EmployeeDto> members = projectTaskService.getEmployeeByProjectId(id);
+        return ResponseEntity.ok(members);
+    }
+
 }

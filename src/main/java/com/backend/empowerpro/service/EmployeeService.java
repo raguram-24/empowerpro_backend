@@ -7,9 +7,10 @@ import com.backend.empowerpro.dto.employee.EmployeeDto;
 import java.util.List;
 
 public interface EmployeeService {
-    List<Employee> getAllEmployees();
+    List<Employee> getAllEmployees(String role);
     EmployeeDto getEmployeeById(Long id);
     EmployeeDto createEmployee(EmployeeCreationDto employeeCreationDto);
     EmployeeDto updateEmployee(Long id, EmployeeCreationDto employeeCreationDto);
     void deleteEmployee(Long id);
+
 }

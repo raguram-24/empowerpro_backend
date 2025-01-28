@@ -1,15 +1,17 @@
 package com.backend.empowerpro.controller;
 
 
+import com.backend.empowerpro.auth.entity.Employee;
 import com.backend.empowerpro.auth.utils.EmployeeUpdateRequest;
 import com.backend.empowerpro.dto.attendance.CheckoutAttendanceDto;
 import com.backend.empowerpro.dto.attendance.CreateAttendanceDto;
 
+
 import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
 import com.backend.empowerpro.dto.employee.EmployeeDto;
 import com.backend.empowerpro.entity.PayRoll;
-import com.backend.empowerpro.service.EmployeeService;
-import com.backend.empowerpro.service.PayrollService;
+import com.backend.empowerpro.service.*;
+//import com.backend.empowerpro.service.PayrollService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,9 +23,6 @@ import com.backend.empowerpro.dto.leave.LeaveCreationDto;
 import com.backend.empowerpro.dto.leave.LeaveDto;
 import com.backend.empowerpro.dto.leave.TodayLeaveDto;
 import com.backend.empowerpro.entity.Attendance;
-import com.backend.empowerpro.service.AttendanceService;
-import com.backend.empowerpro.service.ComplaintService;
-import com.backend.empowerpro.service.LeaveService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -58,6 +57,14 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
+
+    @GetMapping("/role/{role}")
+    public ResponseEntity<List<Employee>> getAllEmployee(@PathVariable String role) {
+        System.out.println("checking role " + role);
+        return ResponseEntity.ok(employeeService.getAllEmployees(role));
+    }
+
+
 
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeCreationDto employeeCreationDto) {
@@ -166,28 +173,28 @@ public class EmployeeController {
 
 
 
-    @PostMapping("/createAttendance")
-    public ResponseEntity<Attendance> createAttendance(
-            @RequestBody CreateAttendanceDto createAttendanceDto
-    ){
-      Attendance attendance =   attendanceService.createAttendance(createAttendanceDto);
-      return ResponseEntity.ok(attendance);
-    }
+//    @PostMapping("/createAttendance")
+//    public ResponseEntity<Attendance> createAttendance(
+//            @RequestBody CreateAttendanceDto createAttendanceDto
+//    ){
+//      Attendance attendance =   attendanceService.createAttendance(createAttendanceDto);
+//      return ResponseEntity.ok(attendance);
+//    }
 
-    @PostMapping("/checkoutAttendance/{id}")
-    public ResponseEntity<Attendance> checkoutAttendance(
-            @RequestBody CheckoutAttendanceDto checkoutAttendanceDto,
-            @PathVariable("id") Long id
-    ){
+//    @PostMapping("/checkoutAttendance/{id}")
+//    public ResponseEntity<Attendance> checkoutAttendance(
+//            @RequestBody CheckoutAttendanceDto checkoutAttendanceDto,
+//            @PathVariable("id") Long id
+//    ){
+//
+//        Attendance attendance = attendanceService.checkoutUpdateAttendance(checkoutAttendanceDto,id);
+//        return ResponseEntity.ok(attendance);
+//    }
 
-        Attendance attendance = attendanceService.checkoutUpdateAttendance(checkoutAttendanceDto,id);
-        return ResponseEntity.ok(attendance);
-    }
-
-    @GetMapping("/getAllAttendance")
-    public ResponseEntity<List<Attendance>> getAllAttendance() {
-        List<Attendance> attendance = attendanceService.getAllAttendance();
-        return ResponseEntity.ok(attendance);
-    }
+//    @GetMapping("/getAllAttendance")
+//    public ResponseEntity<List<Attendance>> getAllAttendance() {
+//        List<Attendance> attendance = attendanceService.getAllAttendance();
+//        return ResponseEntity.ok(attendance);
+//    }
 
 }

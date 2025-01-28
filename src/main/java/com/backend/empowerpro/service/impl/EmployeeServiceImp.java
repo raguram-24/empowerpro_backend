@@ -1,6 +1,7 @@
 package com.backend.empowerpro.service.impl;
 
 import com.backend.empowerpro.auth.entity.Employee;
+import com.backend.empowerpro.auth.entity.EmployeeRole;
 import com.backend.empowerpro.auth.repository.EmployeeRepository;
 import com.backend.empowerpro.dto.employee.EmployeeCreationDto;
 import com.backend.empowerpro.dto.employee.EmployeeDto;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,14 +25,10 @@ public class EmployeeServiceImp implements EmployeeService {
     private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImp.class);
 
     @Override
-    public List<Employee> getAllEmployees() {
-       try{
-           List<Employee> result  = employeeRepository.findAll();
-           return result;
-       }catch (Exception e){
-           logger.error("Error Has been Occurred {}",e.getMessage());
-           throw new RuntimeException("An unexpected error occurred while Creating Bankdetails", e);
-       }
+    public List<Employee> getAllEmployees(String role) {
+        System.out.println("ok");
+        return  employeeRepository.findEmployeeByRole(EmployeeRole.valueOf(role));
+//        return employeeRepository.findAll();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @PostMapping("/register")
-    @PreAuthorize("hasAuthority('Admin')")
+    //@PreAuthorize("hasAuthority('Admin')")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest registerRequest) {
         return ResponseEntity.ok(authService.register(registerRequest));
     }
@@ -52,8 +52,8 @@ public class AdminController {
         return ResponseEntity.ok("hello");
     }
 
-    @GetMapping("/get-employees")
-    public ResponseEntity<List<Employee>> getAllEmployees() {
-        return ResponseEntity.ok(employeeService.getAllEmployees());
-    }
+//    @GetMapping("/get-employees")
+//    public ResponseEntity<List<Employee>> getAllEmployees() {
+//        return ResponseEntity.ok(employeeService.getAllEmployees());
+//    }
 }

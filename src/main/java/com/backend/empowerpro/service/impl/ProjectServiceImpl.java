@@ -70,5 +70,10 @@ public class ProjectServiceImpl implements ProjectService {
         }
     }
 
+    @Override
+    public List<Project> getProjectByTeamLeader(Long teamLeaderId) {
+        return projectRepo.findProjectByTeamlead(teamLeaderId);
+    }
+
 
 }
