@@ -19,6 +19,8 @@ public class VacancyDto {
     private String requirements;
     private String responsibilities;
     private Date applicationDeadline;
+    private String minSalary;
+    private String maxSalary;
     private String contactEmail;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

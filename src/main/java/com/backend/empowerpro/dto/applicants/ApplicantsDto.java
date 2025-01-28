@@ -19,19 +19,15 @@ import java.util.Date;
 @Setter
 public class ApplicantsDto {
     private Long id;
+    private Long vacancyId;
     private String firstName;
     private String lastName;
-    private Integer nic;
+    private String city;
+    private String country;
     private String address;
     private String email;
     private int phoneNumber;
-    private String university;
-    private String experienceTitle;
-    private String companyName;
-    private Date workedFrom;
-    private Date workedTo;
     private String resume;
-    private String resumePath;
     private LocalDateTime submittedAt;
     private VacancyDto vacancy;
 

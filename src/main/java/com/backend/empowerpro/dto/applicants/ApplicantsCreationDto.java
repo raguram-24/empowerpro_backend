@@ -2,10 +2,7 @@ package com.backend.empowerpro.dto.applicants;
 
 import com.backend.empowerpro.dto.vacancy.VacancyDto;
 import com.backend.empowerpro.entity.Vacancy;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -13,20 +10,17 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ApplicantsCreationDto {
     private Long id;
+    private Long vacancyId;
     private String firstName;
     private String lastName;
-    private Integer nic;
+    private String city;
+    private String country;
     private String address;
     private String email;
     private int phoneNumber;
-    private String university;
-    private String experienceTitle;
-    private String companyName;
-    private Date workedFrom;
-    private Date workedTo;
     private String resume;
-    private String resumePath;
     private VacancyDto vacancy;
 }
