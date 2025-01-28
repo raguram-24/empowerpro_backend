@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -15,14 +16,12 @@ import java.util.List;
 @Getter
 @Setter
 public class ProjectTaskCreationDto {
-    private Project project;
+    private Long projectId;
     private String taskTitle;
     private String taskDescription;
-    private List<String> members;
-    private List<String> labels;
+    private List<Long> members;
     private String taskStatus;
-    private Date dueDate;
+    private LocalDate dueDate;
     private Time dueTime;
     private String dateReminder;
-    private String urlLink;
 }

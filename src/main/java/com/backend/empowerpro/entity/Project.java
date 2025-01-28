@@ -56,9 +56,9 @@ public class Project {
     @Column(name = "project_team")
     private List<Long> projectTeamMembers;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProjectTask> projectTasks;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<ProjectTask> projectTasks;
 
     @CreationTimestamp
     @Column(name = "upload_date", updatable = false)

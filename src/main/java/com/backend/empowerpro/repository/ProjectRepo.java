@@ -14,4 +14,6 @@ public interface ProjectRepo extends JpaRepository<Project,Long> {
     List<Project> getProjectByUserId(Long UserId);
 
     List<Project> findProjectByProjectNameContaining( String keyword);
+
+    List<Project> findProjectByTeamlead(long teamleadId);
 }

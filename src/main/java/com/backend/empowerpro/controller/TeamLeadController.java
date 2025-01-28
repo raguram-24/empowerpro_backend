@@ -4,8 +4,11 @@ import com.backend.empowerpro.auth.service.AuthService;
 import com.backend.empowerpro.dto.Blog.BlogCommentDto;
 import com.backend.empowerpro.dto.Blog.BlogCreationDto;
 import com.backend.empowerpro.dto.MarkCalendar.MarkCalendarDto;
+import com.backend.empowerpro.dto.Project.ProjectCreationDto;
+import com.backend.empowerpro.dto.Project.ProjectTaskCreationDto;
 import com.backend.empowerpro.dto.attendance.SearchDateRangeDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
+import com.backend.empowerpro.dto.employee.EmployeeDto;
 import com.backend.empowerpro.entity.*;
 import com.backend.empowerpro.service.*;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,7 @@ public class TeamLeadController {
     private final BlogRatingService blogRatingService;
     private  final AttendanceService attendanceService;
     private  final  EmployeeService employeeService;
+    private  final ProjectTaskService projectTaskService;
 
 
 //    -------------------------calendar marker------------------------------------------------
@@ -250,4 +254,17 @@ public class TeamLeadController {
         List<Attendance> attendance = attendanceService.getAttendanceByDate(userId,parsedDate);
         return ResponseEntity.ok(attendance);
     }
+
+//    ---------------------------------------------project Task--------------------------------
+@PostMapping("/createProjectTask")
+    public ResponseEntity<ProjectTask> createProjectTask(@RequestBody ProjectTaskCreationDto projectTaskCreationDto) {
+        ProjectTask projectTask = projectTaskService.createProjectTask(projectTaskCreationDto);
+        return ResponseEntity.ok(projectTask);
+    }
+    @GetMapping("/getEmployeeByProjectId/{id}")
+    public  ResponseEntity<List<EmployeeDto>> getEmployeeByProjectId(@PathVariable("id") Long id){
+        List<EmployeeDto> members = projectTaskService.getEmployeeByProjectId(id);
+        return ResponseEntity.ok(members);
+    }
+
 }

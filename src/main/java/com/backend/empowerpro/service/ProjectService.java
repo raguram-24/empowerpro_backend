@@ -14,4 +14,6 @@ public interface ProjectService {
     List<Project> searchProjectByName(String keyword);
 
     String deleteProject(Long projectId);
+
+    List<Project> getProjectByTeamLeader(Long teamLeaderId);
 }
