@@ -27,8 +27,11 @@ public class Applicants {
     @Column(name = "last_name", length = 50, nullable = false)
     private String lastName;
 
-    @Column(name = "nic", length = 50, nullable = false, unique = true)
-    private Integer nic;
+    @Column(name = "city", length = 50)
+    private String city;
+
+    @Column(name = "country", length = 50)
+    private String country;
 
     @Column(name = "address", length = 500, nullable = false)
     private String address;
@@ -40,24 +43,8 @@ public class Applicants {
     @Column(name = "phone_number", nullable = false, unique = true)
     private int phoneNumber;
 
-    @Column(name = "university")
-    private String university;
-
-    @Column(name = "experience_title", length = 50, nullable = false)
-    private String experienceTitle;
-
-    @Column(name = "company_name")
-    private String companyName;
-
-    @Column(name = "worked_from")
-    private Date workedFrom;
-
-    @Column(name = "worked_to")
-    private Date workedTo;
-
     @Column(name = "resume",nullable = false)
     private String resume;
-
 
     @CreationTimestamp
     @Column(name = "submitted_at", updatable = false)

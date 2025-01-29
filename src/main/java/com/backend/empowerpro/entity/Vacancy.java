@@ -40,6 +40,12 @@ public class Vacancy {
     @Column(name = "deadLine" ,nullable = false  )
     private Date applicationDeadline;
 
+    @Column(name = "min_salary", nullable = false)
+    private String minSalary;
+
+    @Column(name = "max_salary", nullable = false)
+    private String maxSalary;
+
     @Column(name = "contact_email" ,nullable = false  )
     private String contactEmail;
 

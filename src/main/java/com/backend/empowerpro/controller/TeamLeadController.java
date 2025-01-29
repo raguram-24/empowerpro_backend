@@ -6,6 +6,7 @@ import com.backend.empowerpro.dto.Blog.BlogCreationDto;
 import com.backend.empowerpro.dto.MarkCalendar.MarkCalendarDto;
 import com.backend.empowerpro.dto.Project.ProjectCreationDto;
 import com.backend.empowerpro.dto.Project.ProjectTaskCreationDto;
+import com.backend.empowerpro.dto.Project.ProjectTaskDisplayDto;
 import com.backend.empowerpro.dto.attendance.SearchDateRangeDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.employee.EmployeeDto;
@@ -266,5 +267,27 @@ public class TeamLeadController {
         List<EmployeeDto> members = projectTaskService.getEmployeeByProjectId(id);
         return ResponseEntity.ok(members);
     }
+
+    @GetMapping("/getProjectTaskByEmployeeId/{id}")
+    public ResponseEntity<List<ProjectTaskDisplayDto>> getProjectTaskByEmployeeId(@PathVariable("id") Long id) {
+        List<ProjectTaskDisplayDto> projectTasks = projectTaskService.getProjectTaskByEmployeeId(id);
+        return ResponseEntity.ok(projectTasks);
+    }
+
+    @GetMapping("/updateProjectTask/{id}/{status}")
+    public ResponseEntity<String> updateProjectTask(@PathVariable("id") Long id, @PathVariable("status")String status){
+        projectTaskService.updateProjectTask(id,status);
+        return ResponseEntity.ok("SuccessFully updated the project task");
+    }
+
+    @GetMapping("/findCheckedTasksByTeamLead/{id}")
+    public ResponseEntity<List<ProjectTask>> findCheckedTasksByTeamLead(@PathVariable("id") Long id) {
+        List<ProjectTask> projectTasks = projectTaskService.findCheckedTasksByTeamLead(id);
+        return ResponseEntity.ok(projectTasks);
+    }
+
+
+
+
 
 }

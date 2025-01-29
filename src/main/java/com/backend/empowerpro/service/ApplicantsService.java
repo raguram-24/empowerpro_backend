@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ApplicantsService {
     public List<ApplicantsDto> getAllApplicants();
-    public String createApplicants(ApplicantsCreationDto applicantsCreationDto);
+    public ApplicantsDto createApplicants(ApplicantsCreationDto applicantsCreationDto);
     public ApplicantsDto getOneApplicant(Long id);
     public ApplicantsDto updateApplicant(Long id,ApplicantsCreationDto applicantsCreationDto);
     public String deleteVacancy(Long id);

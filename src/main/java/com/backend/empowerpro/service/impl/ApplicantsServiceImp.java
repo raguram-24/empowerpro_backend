@@ -1,9 +1,16 @@
 package com.backend.empowerpro.service.impl;
 
+import com.backend.empowerpro.auth.entity.Employee;
 import com.backend.empowerpro.dto.applicants.ApplicantsCreationDto;
 import com.backend.empowerpro.dto.applicants.ApplicantsDto;
+import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
+import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.entity.Applicants;
+import com.backend.empowerpro.entity.Complaint;
+import com.backend.empowerpro.entity.Vacancy;
+import com.backend.empowerpro.exception.ResourceNotFoundException;
 import com.backend.empowerpro.repository.ApplicantsRepo;
+import com.backend.empowerpro.repository.VacancyRepo;
 import com.backend.empowerpro.service.ApplicantsService;
 import com.backend.empowerpro.utils.ApplicantsMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +25,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ApplicantsServiceImp implements ApplicantsService {
     private final ApplicantsRepo applicantsRepo;
-//    private final FileDownloadUtil fileDownloadUtil;
+    private final VacancyRepo vacancyRepo;
+    //    private final FileDownloadUtil fileDownloadUtil;
 //    private final FileUploadUtil fileUploadUtil;
     private final ApplicantsMapper applicantsMapper;
     private static final Logger logger = LoggerFactory.getLogger(Applicants.class);
@@ -39,8 +47,30 @@ public class ApplicantsServiceImp implements ApplicantsService {
     }
 
     @Override
-    public String createApplicants(ApplicantsCreationDto applicantsCreationDto) {
-        return "";
+    public ApplicantsDto createApplicants(ApplicantsCreationDto applicantsCreationDto) {
+        try {
+            // Validate Vacancy
+            Vacancy vacancy = vacancyRepo.findById(applicantsCreationDto.getVacancyId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Vacancy not found with ID: " + applicantsCreationDto.getVacancyId()));
+
+            // Map DTO to Entity
+            Applicants applicant = new Applicants();
+            applicant.setFirstName(applicantsCreationDto.getFirstName());
+            applicant.setLastName(applicantsCreationDto.getLastName());
+            applicant.setAddress(applicantsCreationDto.getAddress());
+            applicant.setEmail(applicantsCreationDto.getEmail());
+            applicant.setPhoneNumber(applicantsCreationDto.getPhoneNumber());
+            applicant.setResume(applicantsCreationDto.getResume());
+            applicant.setVacancy(vacancy);
+
+            // Save the applicant entity
+            Applicants savedApplicant = applicantsRepo.save(applicant);
+
+            return applicantsMapper.toApplicantsDto(savedApplicant);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error while creating applicant: " + e.getMessage(), e);
+        }
     }
 
     @Override

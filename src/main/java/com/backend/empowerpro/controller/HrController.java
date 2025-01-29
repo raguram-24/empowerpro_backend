@@ -1,5 +1,6 @@
 package com.backend.empowerpro.controller;
 
+import com.backend.empowerpro.dto.applicants.ApplicantsDto;
 import com.backend.empowerpro.dto.complaint.ComplaintCreationDto;
 import com.backend.empowerpro.dto.complaint.ComplaintDto;
 import com.backend.empowerpro.dto.leave.LeaveCreationDto;
@@ -55,6 +56,7 @@ public class HrController {
     private final LeaveService leaveService;
     private final ComplaintRepo complaintRepo;
     private final MedicalClaimService medicalClaimService;
+    private final ApplicantsService applicantsService;
     private final String UPLOAD_DIR_COMPLAINTS = "D:\\3rd year\\New folder\\empowerpro_backend\\uploads\\complaints";
     @Value("${project.events}")
     private String EVENTS_DIR;
@@ -68,12 +70,12 @@ public class HrController {
     public ResponseEntity<String> creation(@RequestBody VacancyCreationDto vacancyCreationDto) {
         return ResponseEntity.ok(vacancyService.createVacancy(vacancyCreationDto));
     }
-    @PreAuthorize("hasAuthority('HR')")
+//    @PreAuthorize("hasAuthority('HR')")
     @GetMapping("/vacancy-get-all")
     public ResponseEntity<List<VacancyDto>> getAllVacancies() {
         return ResponseEntity.ok(vacancyService.getAllVacancies());
     }
-    @PreAuthorize("hasAuthority('HR')")
+//    @PreAuthorize("hasAuthority('HR')")
     @GetMapping("/vacancy-get-one/{id}")
     public ResponseEntity<VacancyDto> getOneVacancy(@PathVariable Long id) {
         return ResponseEntity.ok(vacancyService.getOneVacancy(id));
@@ -284,7 +286,11 @@ public class HrController {
         return ResponseEntity.ok().body(leaveService.getAllLeaves());
     }
 
-
+    @PreAuthorize("hasAuthority('HR')")
+    @GetMapping("/applicants-get-all")
+    public ResponseEntity<List<ApplicantsDto>> getAllApplicants(){
+        return ResponseEntity.ok().body(applicantsService.getAllApplicants());
+    }
 
 
 }

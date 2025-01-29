@@ -34,6 +34,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/api/v1/executive/**").permitAll();
                     auth.requestMatchers("/api/v1/teamlead/**").permitAll();
                     auth.requestMatchers("/api/v1/finance/**").permitAll();
+                    auth.requestMatchers("/api/user/**").permitAll();
 //                                auth.requestMatchers("/api/v1/finance/**").hasRole("Finance");
 //                                auth.anyRequest().authenticated();
                 })

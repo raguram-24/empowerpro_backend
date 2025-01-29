@@ -19,7 +19,7 @@ public class ProjectTaskCreationDto {
     private Long projectId;
     private String taskTitle;
     private String taskDescription;
-    private List<Long> members;
+    private Long members;
     private String taskStatus;
     private LocalDate dueDate;
     private Time dueTime;

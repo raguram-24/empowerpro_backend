@@ -39,10 +39,8 @@ public class ProjectTask {
     private String taskStatus;
 
 
-    @ElementCollection
-    @CollectionTable(name = "members", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "members")
-    private List<Long> members;
+    private Long members;
 
     @Column(name = "due_date", nullable = false)
     private LocalDate dueDate;
